@@ -1,7 +1,13 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.ProjectGithub" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.ProjectGithub" parent="Theme.Material3.DayNight">
 
+    </style>
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/teal_200</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.ProjectGithub</item>
     </style>
 
 </resources>

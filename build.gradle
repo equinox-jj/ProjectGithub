@@ -7,6 +7,7 @@ buildscript {
         retrofit_version = '2.9.0'
         navigation_version = '2.5.3'
         datastore_version = '1.0.0'
+        splash_screen_version = '1.0.0'
         coil_version = '2.2.2'
         lottie_version = '5.2.0'
         gson_version = '2.10'
