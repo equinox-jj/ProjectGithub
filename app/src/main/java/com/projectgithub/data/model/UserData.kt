@@ -1,5 +1,9 @@
 package com.projectgithub.data.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class UserData(
     val username: String = "",
     val name: String = "",
@@ -9,4 +13,4 @@ data class UserData(
     val followers: String = "",
     val following: String = "",
     val avatar: Int = 0,
-)
+) : Parcelable

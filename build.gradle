@@ -11,6 +11,9 @@ buildscript {
         lottie_version = '5.2.0'
         gson_version = '2.10'
     }
+    dependencies {
+        classpath("androidx.navigation:navigation-safe-args-gradle-plugin:$navigation_version")
+    }
 }
 plugins {
     id 'com.android.application' version '7.3.1' apply false
