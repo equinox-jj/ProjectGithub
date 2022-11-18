@@ -21,9 +21,6 @@
         android:name="com.projectgithub.presentation.detail.DetailFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_detail">
-        <argument
-            android:name="userData"
-            app:argType="com.projectgithub.data.model.UserData" />
     </fragment>
 
 
