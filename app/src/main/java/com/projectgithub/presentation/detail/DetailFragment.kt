@@ -28,8 +28,12 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         binding.apply {
             ivAvatarDet.load(args.userData.avatar) {
                 crossfade(800)
+            }
+            ivAvatarSmallDet.load(args.userData.avatar) {
+                crossfade(800)
                 transformations(CircleCropTransformation())
             }
+            ctlDet.title = args.userData.name
             tvUsernameDet.text = args.userData.username
             tvCompanyDet.text = args.userData.company
             tvLocationDet.text = args.userData.location

@@ -1,148 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.detail.DetailFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/ablDet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/ivAvatarDet"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:contentDescription="@null"
-            android:scaleType="fitXY"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.100000000"
-            tools:src="@tools:sample/avatars" />
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/ctlDet"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
+            app:titleCollapseMode="fade"
+            app:titleTextEllipsize="end">
 
-        <TextView
-            android:id="@+id/tvUsernameDet"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:ellipsize="end"
-            android:fontFamily="@font/poppins_bold"
-            android:gravity="center_horizontal"
-            android:maxLines="1"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ivAvatarDet"
-            tools:text="Lorem Ipsum" />
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivAvatarDet"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.9"
+                android:scaleType="centerCrop"
+                app:layout_collapseMode="parallax"
+                app:shapeAppearanceOverlay="@style/ShapeImageRoundedBottom"
+                tools:src="@tools:sample/avatars" />
 
-        <TextView
-            android:id="@+id/tvCompanyDet"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="8dp"
-            android:drawablePadding="5dp"
-            android:ellipsize="end"
-            android:fontFamily="@font/poppins_medium"
-            android:gravity="center_horizontal"
-            android:maxLines="1"
-            android:textSize="14sp"
-            app:drawableStartCompat="@drawable/ic_round_work_24"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvUsernameDet"
-            tools:text="Lorem Ipsum" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_shadow"
+                app:layout_collapseMode="parallax" />
 
-        <TextView
-            android:id="@+id/tvLocationDet"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="8dp"
-            android:drawablePadding="5dp"
-            android:ellipsize="end"
-            android:fontFamily="@font/poppins_medium"
-            android:gravity="center_horizontal"
-            android:maxLines="1"
-            android:textSize="14sp"
-            app:drawableStartCompat="@drawable/ic_round_location_on_24"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvCompanyDet"
-            tools:text="Lorem Ipsum" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintAblDet"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_collapseMode="parallax">
 
-        <TextView
-            android:id="@+id/textRepository"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_bold"
-            android:text="@string/repository"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@+id/textFollowers"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textFollowers" />
+                <ImageView
+                    android:id="@+id/ivAvatarSmallDet"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:contentDescription="@null"
+                    android:scaleType="fitXY"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@tools:sample/avatars" />
 
-        <TextView
-            android:id="@+id/textFollowers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/poppins_bold"
-            android:text="@string/followers"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="@+id/tvLocationDet"
-            app:layout_constraintStart_toStartOf="@+id/tvLocationDet"
-            app:layout_constraintTop_toBottomOf="@+id/tvLocationDet" />
+                <TextView
+                    android:id="@+id/tvUsernameDet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/poppins_bold"
+                    android:gravity="center_horizontal"
+                    android:maxLines="1"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ivAvatarSmallDet"
+                    tools:text="Lorem Ipsum" />
 
-        <TextView
-            android:id="@+id/textFollowing"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_bold"
-            android:text="@string/following"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textFollowers"
-            app:layout_constraintTop_toTopOf="@+id/textFollowers" />
+                <TextView
+                    android:id="@+id/tvCompanyDet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:drawablePadding="5dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/poppins_medium"
+                    android:gravity="center_horizontal"
+                    android:maxLines="1"
+                    android:textSize="14sp"
+                    app:drawableStartCompat="@drawable/ic_round_work_24"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvUsernameDet"
+                    tools:text="Lorem Ipsum" />
 
-        <TextView
-            android:id="@+id/tvRepository"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_medium"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="@+id/textRepository"
-            app:layout_constraintStart_toStartOf="@+id/textRepository"
-            app:layout_constraintTop_toBottomOf="@+id/textRepository"
-            tools:text="Lorem Ipsum" />
+                <TextView
+                    android:id="@+id/tvLocationDet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:drawablePadding="5dp"
+                    android:ellipsize="end"
+                    android:fontFamily="@font/poppins_medium"
+                    android:gravity="center_horizontal"
+                    android:maxLines="1"
+                    android:textSize="14sp"
+                    app:drawableStartCompat="@drawable/ic_round_location_on_24"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvCompanyDet"
+                    tools:text="Lorem Ipsum" />
 
-        <TextView
-            android:id="@+id/tvFollowers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_medium"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="@+id/textFollowers"
-            app:layout_constraintStart_toStartOf="@+id/textFollowers"
-            app:layout_constraintTop_toBottomOf="@+id/textFollowers"
-            tools:text="Lorem Ipsum" />
+                <TextView
+                    android:id="@+id/textRepository"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="@string/repository"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toStartOf="@+id/textFollowers"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/textFollowers" />
 
-        <TextView
-            android:id="@+id/tvFollowing"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_medium"
-            android:textSize="12sp"
-            app:layout_constraintEnd_toEndOf="@+id/textFollowing"
-            app:layout_constraintStart_toStartOf="@+id/textFollowing"
-            app:layout_constraintTop_toBottomOf="@+id/textFollowing"
-            tools:text="Lorem Ipsum" />
+                <TextView
+                    android:id="@+id/textFollowers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="@string/followers"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="@+id/tvLocationDet"
+                    app:layout_constraintStart_toStartOf="@+id/tvLocationDet"
+                    app:layout_constraintTop_toBottomOf="@+id/tvLocationDet" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/textFollowing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="@string/following"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/textFollowers"
+                    app:layout_constraintTop_toTopOf="@+id/textFollowers" />
 
-</ScrollView>
+                <TextView
+                    android:id="@+id/tvRepository"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:fontFamily="@font/poppins_medium"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="@+id/textRepository"
+                    app:layout_constraintStart_toStartOf="@+id/textRepository"
+                    app:layout_constraintTop_toBottomOf="@+id/textRepository"
+                    tools:text="Lorem Ipsum" />
+
+                <TextView
+                    android:id="@+id/tvFollowers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="@+id/textFollowers"
+                    app:layout_constraintStart_toStartOf="@+id/textFollowers"
+                    app:layout_constraintTop_toBottomOf="@+id/textFollowers"
+                    tools:text="Lorem Ipsum" />
+
+                <TextView
+                    android:id="@+id/tvFollowing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_medium"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="@+id/textFollowing"
+                    app:layout_constraintStart_toStartOf="@+id/textFollowing"
+                    app:layout_constraintTop_toBottomOf="@+id/textFollowing"
+                    tools:text="Lorem Ipsum" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/tlDet"
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                app:layout_collapseMode="pin" />
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
