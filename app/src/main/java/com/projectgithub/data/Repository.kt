@@ -6,6 +6,8 @@ import com.projectgithub.data.model.ResultItem
 import com.projectgithub.data.network.ApiServices
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
+import java.io.IOException
 
 class Repository constructor(private val apiServices: ApiServices) {
 
@@ -15,6 +17,10 @@ class Repository constructor(private val apiServices: ApiServices) {
             val result = apiServices.searchUser(query).items
             emit(Resources.Success(result))
         } catch (e: Exception) {
+            emit(Resources.Error(e.localizedMessage ?: ""))
+        } catch (e: HttpException) {
+            emit(Resources.Error(e.localizedMessage ?: ""))
+        } catch (e: IOException) {
             emit(Resources.Error(e.localizedMessage ?: ""))
         }
     }

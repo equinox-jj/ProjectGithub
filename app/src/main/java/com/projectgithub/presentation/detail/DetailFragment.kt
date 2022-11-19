@@ -3,6 +3,7 @@ package com.projectgithub.presentation.detail
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.load
 import coil.transform.CircleCropTransformation
@@ -24,6 +25,10 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentDetailBinding.bind(view)
+        binding.toolbarDet.apply {
+            setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_new_24)
+            setOnClickListener { findNavController().popBackStack() }
+        }
 
         initObserver()
     }

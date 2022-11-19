@@ -2,6 +2,7 @@ package com.projectgithub.presentation.home
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import com.projectgithub.R
@@ -30,6 +31,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun setupSearch() {
         binding.apply {
+            svUserList.isSubmitButtonEnabled = true
             svUserList.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
                     query?.let {
@@ -68,13 +70,29 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     binding.rvUserList.visibility = View.INVISIBLE
                 }
                 is Resources.Success -> {
-                    binding.pbHome.visibility = View.INVISIBLE
-                    binding.rvUserList.visibility = View.VISIBLE
-                    response.data?.let { homeAdapter.setData(it) }
+                    response.data?.let {
+                        if (it.isNotEmpty()) {
+                            binding.pbHome.visibility = View.INVISIBLE
+                            binding.rvUserList.visibility = View.VISIBLE
+                            homeAdapter.setData(it)
+                        } else {
+                            binding.pbHome.visibility = View.INVISIBLE
+                            binding.rvUserList.visibility = View.INVISIBLE
+                            Toast.makeText(
+                                context,
+                                response.message ?: "User Not Found.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
                 }
                 is Resources.Error -> {
                     binding.pbHome.visibility = View.INVISIBLE
                     binding.rvUserList.visibility = View.INVISIBLE
+                    Toast.makeText(context,
+                        response.message ?: "Check Your Internet Connection.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }

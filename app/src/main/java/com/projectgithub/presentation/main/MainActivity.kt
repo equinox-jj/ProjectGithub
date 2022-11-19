@@ -3,11 +3,6 @@ package com.projectgithub.presentation.main
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.navigation.NavController
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupActionBarWithNavController
-import com.projectgithub.R
 import com.projectgithub.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
