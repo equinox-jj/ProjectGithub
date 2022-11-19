@@ -23,19 +23,19 @@ interface ApiServices {
     @GET(DETAIL_API)
     @Headers("Authorization: token $TOKEN")
     suspend fun getUserByName(
-        @Path("{username}") username: String,
+        @Path("username") username: String,
     ): DetailResponse
 
     @GET(FOLLOWERS_API)
     @Headers("Authorization: token $TOKEN")
     suspend fun getFollowers(
-        @Path("{username}") username: String,
+        @Path("username") username: String,
     ): DetailResponse
 
     @GET(FOLLOWING_API)
     @Headers("Authorization: token $TOKEN")
     suspend fun getFollowing(
-        @Path("{username}") username: String,
+        @Path("username") username: String,
     ): DetailResponse
 
 }

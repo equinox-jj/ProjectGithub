@@ -23,7 +23,7 @@ class HomeViewModel constructor(private val repository: Repository) : ViewModel(
     fun searchUser(query: String) {
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
-            delay(800)
+            delay(800L)
             repository.searchUser(query)
                 .onStart {
                     _state.value = Resources.Loading()
