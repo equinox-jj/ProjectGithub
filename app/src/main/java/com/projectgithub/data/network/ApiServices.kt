@@ -7,6 +7,7 @@ import com.projectgithub.common.Constants.SEARCH_API
 import com.projectgithub.common.Constants.TOKEN
 import com.projectgithub.data.model.DetailResponse
 import com.projectgithub.data.model.ResultItem
+import com.projectgithub.data.model.SearchResponse
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Path
@@ -14,11 +15,11 @@ import retrofit2.http.Query
 
 interface ApiServices {
 
-    @GET(SEARCH_API)
+    @GET("search/users")
     @Headers("Authorization: token $TOKEN")
     suspend fun searchUser(
         @Query("q") query: String,
-    ): List<ResultItem>
+    ): SearchResponse
 
     @GET(DETAIL_API)
     @Headers("Authorization: token $TOKEN")

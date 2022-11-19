@@ -1,6 +1,7 @@
 package com.projectgithub.presentation.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -28,7 +29,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun initObserver() {
-        homeViewModel.search.observe(viewLifecycleOwner) { response ->
+        homeViewModel.state.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resources.Loading -> {
                     binding.pbHome.visibility = View.VISIBLE
@@ -37,6 +38,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 is Resources.Success -> {
                     binding.pbHome.visibility = View.INVISIBLE
                     binding.rvUserList.visibility = View.VISIBLE
+                    response.data?.let { homeAdapter.setData(it) }
+                    Log.d("dataResponse", response.data.toString())
                 }
                 is Resources.Error -> {
                     binding.pbHome.visibility = View.INVISIBLE
@@ -56,7 +59,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-                homeViewModel.searchUser(newText)
+//                homeViewModel.searchUser(newText)
                 return true
             }
 

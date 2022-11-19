@@ -13,7 +13,7 @@ class Repository constructor(private val apiServices: ApiServices) {
     fun searchUser(query: String): Flow<Resources<List<ResultItem>>> = flow {
         emit(Resources.Loading())
         try {
-            val result = apiServices.searchUser(query)
+            val result = apiServices.searchUser(query).items
             emit(Resources.Success(result))
         } catch (e: Exception) {
             emit(Resources.Error(e.localizedMessage ?: ""))
