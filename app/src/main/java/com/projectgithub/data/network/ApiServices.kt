@@ -6,7 +6,6 @@ import com.projectgithub.common.Constants.FOLLOWING_API
 import com.projectgithub.common.Constants.SEARCH_API
 import com.projectgithub.common.Constants.TOKEN
 import com.projectgithub.data.model.DetailResponse
-import com.projectgithub.data.model.ResultItem
 import com.projectgithub.data.model.SearchResponse
 import retrofit2.http.GET
 import retrofit2.http.Headers
@@ -15,7 +14,7 @@ import retrofit2.http.Query
 
 interface ApiServices {
 
-    @GET("search/users")
+    @GET(SEARCH_API)
     @Headers("Authorization: token $TOKEN")
     suspend fun searchUser(
         @Query("q") query: String,

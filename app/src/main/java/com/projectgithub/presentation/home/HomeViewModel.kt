@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.projectgithub.common.Resources
 import com.projectgithub.data.Repository
 import com.projectgithub.data.model.ResultItem
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -16,10 +18,31 @@ class HomeViewModel constructor(private val repository: Repository) : ViewModel(
     private val _state = MutableLiveData<Resources<List<ResultItem>>>()
     val state: LiveData<Resources<List<ResultItem>>> = _state
 
-//    private var searchJob: Job? = null
+    private var searchJob: Job? = null
+
+//    fun searchUser(query: String) {
+//        viewModelScope.launch {
+//            repository.searchUser(query)
+//                .onStart {
+//                    _state.value = Resources.Loading()
+//                }
+//                .catch { error ->
+//                    error.message?.let { message ->
+//                        _state.value = Resources.Error(message)
+//                    }
+//                }
+//                .collect { result ->
+//                    result.data?.let { data ->
+//                        _state.value = Resources.Success(data)
+//                    }
+//                }
+//        }
+//    }
 
     fun searchUser(query: String) {
-        viewModelScope.launch {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(600)
             repository.searchUser(query)
                 .onStart {
                     _state.value = Resources.Loading()
@@ -36,26 +59,5 @@ class HomeViewModel constructor(private val repository: Repository) : ViewModel(
                 }
         }
     }
-
-//    fun searchUser(query: String) {
-//        searchJob?.cancel()
-//        searchJob = viewModelScope.launch {
-//            delay(600)
-//            repository.searchUser(query)
-//                .onStart {
-//                    _search.value = Resources.Loading()
-//                }
-//                .catch { error ->
-//                    error.message?.let { message ->
-//                        _search.value = Resources.Error(message)
-//                    }
-//                }
-//                .collect { result ->
-//                    result.data?.let { data ->
-//                        _search.value = Resources.Success(data)
-//                    }
-//                }
-//        }
-//    }
 
 }

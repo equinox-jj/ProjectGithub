@@ -10,6 +10,7 @@ import com.projectgithub.common.Resources
 import com.projectgithub.data.Repository
 import com.projectgithub.data.network.ApiConfig
 import com.projectgithub.databinding.FragmentHomeBinding
+import com.projectgithub.presentation.home.adapter.HomeAdapter
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
@@ -26,6 +27,37 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         initRecycler()
         initViewModel()
         initObserver()
+        setupSearch()
+    }
+
+    private fun setupSearch() {
+        binding.apply {
+            svUserList.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    query?.let {
+                        if (it.isNotEmpty()) {
+                            homeViewModel.searchUser(query)
+                            svUserList.clearFocus()
+                        }
+                    }
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    newText?.let {
+                        if (it.isNotEmpty()) {
+                            homeViewModel.searchUser(newText)
+                        }
+                    }
+                    return true
+                }
+            })
+            svUserList.setOnCloseListener {
+                svUserList.setQuery("", false)
+                svUserList.clearFocus()
+                true
+            }
+        }
     }
 
     private fun initObserver() {
@@ -52,18 +84,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun initViewModel() {
         val repository = Repository(ApiConfig.apiServices)
         homeViewModel = HomeViewModel(repository)
-        binding.svUserList.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                homeViewModel.searchUser(query)
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String): Boolean {
-//                homeViewModel.searchUser(newText)
-                return true
-            }
-
-        })
     }
 
     private fun initRecycler() {

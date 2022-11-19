@@ -1,4 +1,4 @@
-package com.projectgithub.presentation.home
+package com.projectgithub.presentation.home.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

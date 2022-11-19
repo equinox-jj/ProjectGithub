@@ -1,7 +1,5 @@
-package com.projectgithub.presentation.home
+package com.projectgithub.presentation.home.adapter
 
-import android.service.autofill.UserData
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.RoundedCornersTransformation
