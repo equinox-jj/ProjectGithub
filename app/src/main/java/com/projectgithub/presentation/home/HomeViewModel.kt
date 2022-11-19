@@ -20,29 +20,10 @@ class HomeViewModel constructor(private val repository: Repository) : ViewModel(
 
     private var searchJob: Job? = null
 
-//    fun searchUser(query: String) {
-//        viewModelScope.launch {
-//            repository.searchUser(query)
-//                .onStart {
-//                    _state.value = Resources.Loading()
-//                }
-//                .catch { error ->
-//                    error.message?.let { message ->
-//                        _state.value = Resources.Error(message)
-//                    }
-//                }
-//                .collect { result ->
-//                    result.data?.let { data ->
-//                        _state.value = Resources.Success(data)
-//                    }
-//                }
-//        }
-//    }
-
     fun searchUser(query: String) {
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
-            delay(600)
+            delay(800)
             repository.searchUser(query)
                 .onStart {
                     _state.value = Resources.Loading()
@@ -60,4 +41,8 @@ class HomeViewModel constructor(private val repository: Repository) : ViewModel(
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        searchJob?.cancel()
+    }
 }

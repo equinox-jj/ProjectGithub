@@ -10,4 +10,9 @@
         <item name="postSplashScreenTheme">@style/Theme.ProjectGithub</item>
     </style>
 
+    <style name="ShapeImageRoundedBottom" parent="">
+        <item name="cornerSizeBottomRight">25dp</item>
+        <item name="cornerSizeBottomLeft">25dp</item>
+    </style>
+
 </resources>

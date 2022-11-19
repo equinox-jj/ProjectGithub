@@ -1,7 +1,6 @@
 package com.projectgithub.presentation.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -25,7 +24,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         _binding = FragmentHomeBinding.bind(view)
 
         initRecycler()
-        initViewModel()
         initObserver()
         setupSearch()
     }
@@ -61,6 +59,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun initObserver() {
+        val repository = Repository(ApiConfig.apiServices)
+        homeViewModel = HomeViewModel(repository)
         homeViewModel.state.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resources.Loading -> {
@@ -71,7 +71,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     binding.pbHome.visibility = View.INVISIBLE
                     binding.rvUserList.visibility = View.VISIBLE
                     response.data?.let { homeAdapter.setData(it) }
-                    Log.d("dataResponse", response.data.toString())
                 }
                 is Resources.Error -> {
                     binding.pbHome.visibility = View.INVISIBLE
@@ -79,11 +78,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
             }
         }
-    }
-
-    private fun initViewModel() {
-        val repository = Repository(ApiConfig.apiServices)
-        homeViewModel = HomeViewModel(repository)
     }
 
     private fun initRecycler() {
