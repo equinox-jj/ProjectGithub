@@ -20,6 +20,10 @@ class HomeViewModel constructor(private val repository: Repository) : ViewModel(
 
     private var searchJob: Job? = null
 
+    fun onRefresh(query: String) {
+        searchUser(query)
+    }
+
     fun searchUser(query: String) {
         searchJob?.cancel()
         searchJob = viewModelScope.launch {

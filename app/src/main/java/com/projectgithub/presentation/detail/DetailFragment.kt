@@ -9,6 +9,7 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.setupWithNavController
@@ -21,6 +22,7 @@ import com.projectgithub.data.Repository
 import com.projectgithub.data.model.DetailResponse
 import com.projectgithub.data.network.ApiConfig
 import com.projectgithub.databinding.FragmentDetailBinding
+import com.projectgithub.presentation.ViewModelProviderFactory
 import com.projectgithub.presentation.detail.adapter.ViewPagerAdapter
 import com.projectgithub.presentation.followers.FollowersFragment
 import com.projectgithub.presentation.following.FollowingFragment
@@ -30,8 +32,11 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var detailViewModel: DetailViewModel
     private val args by navArgs<DetailFragmentArgs>()
+
+    private lateinit var detailViewModel: DetailViewModel
+    private lateinit var repository: Repository
+    private lateinit var factory: ViewModelProviderFactory
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,7 +52,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_new_24)
             setupWithNavController(findNavController())
 
-            val menuHost: MenuHost = this
+            val menuHost: MenuHost = this@apply
             menuHost.addMenuProvider(object : MenuProvider {
                 override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                     menuInflater.inflate(R.menu.menu_detail, menu)
@@ -83,17 +88,24 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     }
 
     private fun initObserver() {
-        val repository = Repository(ApiConfig.apiServices)
         val username = args.username
 
-        detailViewModel = DetailViewModel(repository)
+        repository = Repository(ApiConfig.apiServices)
+        factory = ViewModelProviderFactory(repository)
+        detailViewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
+
         detailViewModel.getUserByName(username)
         detailViewModel.state.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resources.Loading -> {
-
+                    binding.pbDet.visibility = View.VISIBLE
+                    binding.constraintDet.visibility = View.GONE
+                    binding.ablDet.visibility = View.GONE
                 }
                 is Resources.Success -> {
+                    binding.pbDet.visibility = View.GONE
+                    binding.constraintDet.visibility = View.VISIBLE
+                    binding.ablDet.visibility = View.VISIBLE
                     response.data?.let { initView(it) }
                 }
                 is Resources.Error -> {
@@ -119,6 +131,16 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             tvRepository.text = data?.publicRepos.toString()
             tvFollowers.text = data?.followers.toString()
             tvFollowers.text = data?.following.toString()
+            setupOnRefresh(data!!.login)
+        }
+    }
+
+    private fun setupOnRefresh(username: String) {
+        binding.apply {
+            refreshDetail.setOnRefreshListener {
+                detailViewModel.onRefresh(username)
+                refreshDetail.isRefreshing = false
+            }
         }
     }
 

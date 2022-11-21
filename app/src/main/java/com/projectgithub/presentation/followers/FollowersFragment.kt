@@ -1,14 +1,15 @@
 package com.projectgithub.presentation.followers
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.projectgithub.R
 import com.projectgithub.common.Resources
 import com.projectgithub.data.Repository
 import com.projectgithub.data.network.ApiConfig
 import com.projectgithub.databinding.FragmentFollowersBinding
+import com.projectgithub.presentation.ViewModelProviderFactory
 import com.projectgithub.presentation.home.adapter.HomeAdapter
 
 class FollowersFragment : Fragment(R.layout.fragment_followers) {
@@ -16,8 +17,10 @@ class FollowersFragment : Fragment(R.layout.fragment_followers) {
     private var _binding: FragmentFollowersBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var followersViewModel: FollowersViewModel
     private lateinit var followersAdapter: HomeAdapter
+    private lateinit var followersViewModel: FollowersViewModel
+    private lateinit var repository: Repository
+    private lateinit var factory: ViewModelProviderFactory
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -28,11 +31,12 @@ class FollowersFragment : Fragment(R.layout.fragment_followers) {
     }
 
     private fun initRecycler() {
-        val repository = Repository(ApiConfig.apiServices)
         val username = arguments?.getString("username").toString()
-        Log.d("argumentFollowers", username)
 
-        followersViewModel = FollowersViewModel(repository)
+        repository = Repository(ApiConfig.apiServices)
+        factory = ViewModelProviderFactory(repository)
+        followersViewModel = ViewModelProvider(this, factory)[FollowersViewModel::class.java]
+
         followersViewModel.getFollowers(username)
         followersViewModel.state.observe(viewLifecycleOwner) { response ->
             when (response) {

@@ -41,6 +41,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     query?.let {
                         if (it.isNotEmpty()) {
                             homeViewModel.searchUser(query)
+                            setupOnRefresh(query)
                             svUserList.clearFocus()
                         }
                     }
@@ -51,6 +52,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     newText?.let {
                         if (it.isNotEmpty()) {
                             homeViewModel.searchUser(newText)
+                            setupOnRefresh(newText)
                         }
                     }
                     return true
@@ -60,6 +62,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 svUserList.setQuery("", false)
                 svUserList.clearFocus()
                 true
+            }
+        }
+    }
+
+    private fun setupOnRefresh(query: String) {
+        binding.apply {
+            refreshHome.setOnRefreshListener {
+                homeViewModel.onRefresh(query)
+                refreshHome.isRefreshing = false
             }
         }
     }

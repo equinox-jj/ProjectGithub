@@ -16,6 +16,10 @@ class DetailViewModel constructor(private val repository: Repository) : ViewMode
     private val _state = MutableLiveData<Resources<DetailResponse>>()
     val state: LiveData<Resources<DetailResponse>> = _state
 
+    fun onRefresh(username: String) {
+        getUserByName(username)
+    }
+
     fun getUserByName(username: String) {
         viewModelScope.launch {
             repository.getUserByName(username)
