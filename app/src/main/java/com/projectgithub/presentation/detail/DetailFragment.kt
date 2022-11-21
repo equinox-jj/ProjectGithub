@@ -1,18 +1,29 @@
 package com.projectgithub.presentation.detail
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.setupWithNavController
 import coil.load
 import coil.transform.CircleCropTransformation
+import com.google.android.material.tabs.TabLayoutMediator
 import com.projectgithub.R
 import com.projectgithub.common.Resources
 import com.projectgithub.data.Repository
 import com.projectgithub.data.model.DetailResponse
 import com.projectgithub.data.network.ApiConfig
 import com.projectgithub.databinding.FragmentDetailBinding
+import com.projectgithub.presentation.detail.adapter.ViewPagerAdapter
+import com.projectgithub.presentation.followers.FollowersFragment
+import com.projectgithub.presentation.following.FollowingFragment
 
 class DetailFragment : Fragment(R.layout.fragment_detail) {
 
@@ -25,12 +36,50 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentDetailBinding.bind(view)
-        binding.toolbarDet.apply {
-            setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_new_24)
-            setOnClickListener { findNavController().popBackStack() }
-        }
 
         initObserver()
+        setupViewPager()
+        setupToolbar()
+    }
+
+    private fun setupToolbar() {
+        binding.toolbarDet.apply {
+            setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_new_24)
+            setupWithNavController(findNavController())
+
+            val menuHost: MenuHost = this
+            menuHost.addMenuProvider(object : MenuProvider {
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menuInflater.inflate(R.menu.menu_detail, menu)
+                }
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    return true
+                }
+            }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+        }
+    }
+
+    private fun setupViewPager() {
+        val tabLayout = binding.tlDet
+        val viewPager = binding.vpDet
+
+        val bundle = Bundle()
+        bundle.putString("username", args.username)
+
+        val fragmentTabs = ArrayList<Fragment>()
+        fragmentTabs.add(FollowersFragment())
+        fragmentTabs.add(FollowingFragment())
+
+        val titles = ArrayList<String>()
+        titles.add("Followers")
+        titles.add("Following")
+
+        viewPager.adapter = ViewPagerAdapter(bundle, fragmentTabs, fragment = this@DetailFragment)
+
+        TabLayoutMediator(tabLayout, viewPager) { tabs, position ->
+            tabs.text = titles[position]
+        }.attach()
     }
 
     private fun initObserver() {
@@ -54,22 +103,22 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         }
     }
 
-    private fun initView(data: DetailResponse) {
+    private fun initView(data: DetailResponse?) {
         binding.apply {
-            ivAvatarDet.load(data.avatarUrl) {
+            ivAvatarDet.load(data?.avatarUrl) {
                 crossfade(800)
             }
-            ivAvatarSmallDet.load(data.avatarUrl) {
+            ivAvatarSmallDet.load(data?.avatarUrl) {
                 crossfade(800)
                 transformations(CircleCropTransformation())
             }
-            ctlDet.title = data.name
-            tvUsernameDet.text = data.login
-            tvCompanyDet.text = data.company.toString()
-            tvLocationDet.text = data.location
-            tvRepository.text = data.publicRepos.toString()
-            tvFollowers.text = data.followers.toString()
-            tvFollowers.text = data.following.toString()
+            ctlDet.title = data?.name
+            tvUsernameDet.text = data?.login
+            tvCompanyDet.text = data?.company.toString()
+            tvLocationDet.text = data?.location
+            tvRepository.text = data?.publicRepos.toString()
+            tvFollowers.text = data?.followers.toString()
+            tvFollowers.text = data?.following.toString()
         }
     }
 

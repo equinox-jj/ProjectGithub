@@ -5,11 +5,13 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.projectgithub.R
 import com.projectgithub.common.Resources
 import com.projectgithub.data.Repository
 import com.projectgithub.data.network.ApiConfig
 import com.projectgithub.databinding.FragmentHomeBinding
+import com.projectgithub.presentation.ViewModelProviderFactory
 import com.projectgithub.presentation.home.adapter.HomeAdapter
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -19,6 +21,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private lateinit var homeAdapter: HomeAdapter
     private lateinit var homeViewModel: HomeViewModel
+    private lateinit var repository: Repository
+    private lateinit var factory: ViewModelProviderFactory
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,8 +65,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun initObserver() {
-        val repository = Repository(ApiConfig.apiServices)
-        homeViewModel = HomeViewModel(repository)
+        repository = Repository(ApiConfig.apiServices)
+        factory = ViewModelProviderFactory(repository)
+        homeViewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
+
         homeViewModel.state.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resources.Loading -> {

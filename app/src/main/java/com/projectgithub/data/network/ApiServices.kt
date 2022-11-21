@@ -6,6 +6,7 @@ import com.projectgithub.common.Constants.FOLLOWING_API
 import com.projectgithub.common.Constants.SEARCH_API
 import com.projectgithub.common.Constants.TOKEN
 import com.projectgithub.data.model.DetailResponse
+import com.projectgithub.data.model.ResultItem
 import com.projectgithub.data.model.SearchResponse
 import retrofit2.http.GET
 import retrofit2.http.Headers
@@ -30,12 +31,12 @@ interface ApiServices {
     @Headers("Authorization: token $TOKEN")
     suspend fun getFollowers(
         @Path("username") username: String,
-    ): DetailResponse
+    ): List<ResultItem>
 
     @GET(FOLLOWING_API)
     @Headers("Authorization: token $TOKEN")
     suspend fun getFollowing(
         @Path("username") username: String,
-    ): DetailResponse
+    ): List<ResultItem>
 
 }

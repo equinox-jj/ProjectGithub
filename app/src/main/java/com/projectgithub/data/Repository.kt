@@ -35,7 +35,7 @@ class Repository constructor(private val apiServices: ApiServices) {
         }
     }
 
-    fun getFollowers(username: String): Flow<Resources<DetailResponse>> = flow {
+    fun getFollowers(username: String): Flow<Resources<List<ResultItem>>> = flow {
         emit(Resources.Loading())
         try {
             val result = apiServices.getFollowers(username)
@@ -45,7 +45,7 @@ class Repository constructor(private val apiServices: ApiServices) {
         }
     }
 
-    fun getFollowing(username: String): Flow<Resources<DetailResponse>> = flow {
+    fun getFollowing(username: String): Flow<Resources<List<ResultItem>>> = flow {
         emit(Resources.Loading())
         try {
             val result = apiServices.getFollowing(username)
