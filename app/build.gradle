@@ -3,8 +3,6 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id("androidx.navigation.safeargs.kotlin")
     id("kotlin-parcelize")
-    id("com.google.dagger.hilt.android")
-    id("kotlin-kapt")
 }
 
 android {
@@ -67,10 +65,6 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:$navigation_version")
     implementation("androidx.navigation:navigation-ui-ktx:$navigation_version")
 
-    // Dagger Hilt
-    implementation("com.google.dagger:hilt-android:$hilt_version")
-    kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
-
     // Coil Image
     implementation("io.coil-kt:coil:$coil_version")
 
@@ -90,6 +84,7 @@ dependencies {
     // Splash Screen
     implementation("androidx.core:core-splashscreen:$splash_screen_version")
 
+    // Swipe Refresh
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:$swipe_refresh_version")
 
 }

@@ -1,18 +1,11 @@
 package com.projectgithub.presentation.detail
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.ui.setupWithNavController
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.google.android.material.tabs.TabLayoutMediator
@@ -44,25 +37,6 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
         initObserver()
         setupViewPager()
-        setupToolbar()
-    }
-
-    private fun setupToolbar() {
-        binding.toolbarDet.apply {
-            setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_new_24)
-            setupWithNavController(findNavController())
-
-            val menuHost: MenuHost = this@apply
-            menuHost.addMenuProvider(object : MenuProvider {
-                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                    menuInflater.inflate(R.menu.menu_detail, menu)
-                }
-
-                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                    return true
-                }
-            }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-        }
     }
 
     private fun setupViewPager() {
@@ -109,7 +83,11 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                     response.data?.let { initView(it) }
                 }
                 is Resources.Error -> {
-
+                    Toast.makeText(
+                        context,
+                        "Check your internet connection",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
