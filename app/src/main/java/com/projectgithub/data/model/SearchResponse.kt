@@ -1,6 +1,9 @@
 package com.projectgithub.data.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import com.projectgithub.common.Constants.TABLE_NAME
 
 data class SearchResponse(
 
@@ -14,6 +17,7 @@ data class SearchResponse(
     val items: List<ResultItem>,
 )
 
+@Entity(tableName = TABLE_NAME)
 data class ResultItem(
 
     @field:SerializedName("gists_url")
@@ -61,6 +65,7 @@ data class ResultItem(
     @field:SerializedName("site_admin")
     val siteAdmin: Boolean,
 
+    @PrimaryKey(autoGenerate = false)
     @field:SerializedName("id")
     val id: Int,
 

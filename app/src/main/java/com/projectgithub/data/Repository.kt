@@ -3,7 +3,7 @@ package com.projectgithub.data
 import com.projectgithub.common.Resources
 import com.projectgithub.data.model.DetailResponse
 import com.projectgithub.data.model.ResultItem
-import com.projectgithub.data.network.ApiServices
+import com.projectgithub.data.source.remote.network.ApiServices
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException

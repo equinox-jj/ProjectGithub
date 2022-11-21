@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.projectgithub.R
 import com.projectgithub.common.Resources
 import com.projectgithub.data.Repository
-import com.projectgithub.data.network.ApiConfig
+import com.projectgithub.data.source.remote.network.ApiConfig
 import com.projectgithub.databinding.FragmentHomeBinding
 import com.projectgithub.presentation.ViewModelProviderFactory
 import com.projectgithub.presentation.home.adapter.HomeAdapter

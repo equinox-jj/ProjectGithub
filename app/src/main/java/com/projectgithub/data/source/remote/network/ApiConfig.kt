@@ -1,4 +1,4 @@
-package com.projectgithub.data.network
+package com.projectgithub.data.source.remote.network
 
 import com.projectgithub.common.Constants.BASE_URL
 import okhttp3.OkHttpClient
