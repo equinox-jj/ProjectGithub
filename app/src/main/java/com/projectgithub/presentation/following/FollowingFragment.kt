@@ -30,37 +30,53 @@ class FollowingFragment : Fragment(R.layout.fragment_following) {
         initRecycler()
     }
 
-    private fun initRecycler() {
+    private fun initObserver() {
         val username = arguments?.getString("username").toString()
 
         repository = Repository(ApiConfig.apiServices)
         factory = ViewModelProviderFactory(repository)
         followingViewModel = ViewModelProvider(this, factory)[FollowingViewModel::class.java]
 
+        setupOnRefresh(username)
         followingViewModel.getFollowing(username)
         followingViewModel.state.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resources.Loading -> {
                     binding.pbFollowing.visibility = View.VISIBLE
                     binding.rvFollowing.visibility = View.INVISIBLE
+                    binding.tvErrorRetry.visibility = View.INVISIBLE
+                    binding.btnErrorRetry.visibility = View.INVISIBLE
                 }
                 is Resources.Success -> {
                     binding.pbFollowing.visibility = View.INVISIBLE
                     binding.rvFollowing.visibility = View.VISIBLE
+                    binding.tvErrorRetry.visibility = View.INVISIBLE
+                    binding.btnErrorRetry.visibility = View.INVISIBLE
                     response.data?.let { followingAdapter.setData(it) }
                 }
                 is Resources.Error -> {
-
+                    binding.pbFollowing.visibility = View.INVISIBLE
+                    binding.rvFollowing.visibility = View.INVISIBLE
+                    binding.tvErrorRetry.visibility = View.VISIBLE
+                    binding.btnErrorRetry.visibility = View.VISIBLE
                 }
             }
         }
     }
 
-    private fun initObserver() {
+    private fun initRecycler() {
         binding.apply {
             followingAdapter = HomeAdapter()
             rvFollowing.adapter = followingAdapter
             rvFollowing.setHasFixedSize(true)
+        }
+    }
+
+    private fun setupOnRefresh(username: String) {
+        binding.apply {
+            btnErrorRetry.setOnClickListener {
+                followingViewModel.onRefresh(username)
+            }
         }
     }
 

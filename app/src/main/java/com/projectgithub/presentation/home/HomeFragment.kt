@@ -85,16 +85,28 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 is Resources.Loading -> {
                     binding.pbHome.visibility = View.VISIBLE
                     binding.rvUserList.visibility = View.INVISIBLE
+                    binding.ivSearchPerson.visibility = View.INVISIBLE
+                    binding.tvSearchText.visibility = View.INVISIBLE
+                    binding.lottieHome.visibility = View.INVISIBLE
+                    binding.tvErrorHome.visibility = View.INVISIBLE
                 }
                 is Resources.Success -> {
                     response.data?.let {
                         if (it.isNotEmpty()) {
                             binding.pbHome.visibility = View.INVISIBLE
                             binding.rvUserList.visibility = View.VISIBLE
+                            binding.ivSearchPerson.visibility = View.INVISIBLE
+                            binding.tvSearchText.visibility = View.INVISIBLE
+                            binding.lottieHome.visibility = View.INVISIBLE
+                            binding.tvErrorHome.visibility = View.INVISIBLE
                             homeAdapter.setData(it)
                         } else {
                             binding.pbHome.visibility = View.INVISIBLE
                             binding.rvUserList.visibility = View.INVISIBLE
+                            binding.ivSearchPerson.visibility = View.VISIBLE
+                            binding.tvSearchText.visibility = View.VISIBLE
+                            binding.lottieHome.visibility = View.INVISIBLE
+                            binding.tvErrorHome.visibility = View.INVISIBLE
                             Toast.makeText(
                                 context,
                                 response.message ?: "User Not Found.",
@@ -106,7 +118,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 is Resources.Error -> {
                     binding.pbHome.visibility = View.INVISIBLE
                     binding.rvUserList.visibility = View.INVISIBLE
-                    Toast.makeText(context,
+                    binding.ivSearchPerson.visibility = View.INVISIBLE
+                    binding.tvSearchText.visibility = View.INVISIBLE
+                    binding.lottieHome.visibility = View.VISIBLE
+                    binding.tvErrorHome.visibility = View.VISIBLE
+                    Toast.makeText(
+                        context,
                         response.message ?: "Check Your Internet Connection.",
                         Toast.LENGTH_SHORT
                     ).show()

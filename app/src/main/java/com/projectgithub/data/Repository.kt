@@ -32,6 +32,10 @@ class Repository constructor(private val apiServices: ApiServices) {
             emit(Resources.Success(result))
         } catch (e: Exception) {
             emit(Resources.Error(e.localizedMessage ?: ""))
+        } catch (e: HttpException) {
+            emit(Resources.Error(e.localizedMessage ?: ""))
+        } catch (e: IOException) {
+            emit(Resources.Error(e.localizedMessage ?: ""))
         }
     }
 
@@ -42,6 +46,10 @@ class Repository constructor(private val apiServices: ApiServices) {
             emit(Resources.Success(result))
         } catch (e: Exception) {
             emit(Resources.Error(e.localizedMessage ?: ""))
+        } catch (e: HttpException) {
+            emit(Resources.Error(e.localizedMessage ?: ""))
+        } catch (e: IOException) {
+            emit(Resources.Error(e.localizedMessage ?: ""))
         }
     }
 
@@ -51,6 +59,10 @@ class Repository constructor(private val apiServices: ApiServices) {
             val result = apiServices.getFollowing(username)
             emit(Resources.Success(result))
         } catch (e: Exception) {
+            emit(Resources.Error(e.localizedMessage ?: ""))
+        } catch (e: HttpException) {
+            emit(Resources.Error(e.localizedMessage ?: ""))
+        } catch (e: IOException) {
             emit(Resources.Error(e.localizedMessage ?: ""))
         }
     }

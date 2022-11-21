@@ -16,6 +16,10 @@ class FollowersViewModel constructor(private val repository: Repository) : ViewM
     private val _state = MutableLiveData<Resources<List<ResultItem>>>()
     val state: LiveData<Resources<List<ResultItem>>> = _state
 
+    fun onRefresh(username: String) {
+        getFollowers(username)
+    }
+
     fun getFollowers(username: String) {
         viewModelScope.launch {
             repository.getFollowers(username)
