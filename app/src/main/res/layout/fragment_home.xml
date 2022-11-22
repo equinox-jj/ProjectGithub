@@ -51,8 +51,8 @@
 
         <ImageView
             android:id="@+id/ivSearchPerson"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:background="@drawable/home_person"
             android:contentDescription="@null"
             android:visibility="visible"
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_extrabold"
             android:text="@string/search_user"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="@+id/ivSearchPerson"
             app:layout_constraintStart_toStartOf="@+id/ivSearchPerson"
@@ -83,6 +83,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/svUserList"
+            app:layout_constraintVertical_bias="0.35000000"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/error_robot" />
@@ -93,7 +94,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_extrabold"
             android:text="@string/check_your_internet_connection"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="@+id/lottieHome"
             app:layout_constraintStart_toStartOf="@id/lottieHome"

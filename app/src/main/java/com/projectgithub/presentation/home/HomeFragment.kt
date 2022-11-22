@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.projectgithub.R
 import com.projectgithub.common.Resources
 import com.projectgithub.data.Repository
+import com.projectgithub.data.source.local.database.UserDatabase
 import com.projectgithub.data.source.remote.network.ApiConfig
 import com.projectgithub.databinding.FragmentHomeBinding
 import com.projectgithub.presentation.ViewModelProviderFactory
@@ -22,6 +23,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var homeAdapter: HomeAdapter
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var repository: Repository
+    private lateinit var userDb: UserDatabase
     private lateinit var factory: ViewModelProviderFactory
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -76,7 +78,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun initObserver() {
-        repository = Repository(ApiConfig.apiServices)
+        userDb = UserDatabase.getInstance(requireContext())
+        repository = Repository(ApiConfig.apiServices, userDb)
         factory = ViewModelProviderFactory(repository)
         homeViewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
 

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.projectgithub.R
 import com.projectgithub.common.Resources
 import com.projectgithub.data.Repository
+import com.projectgithub.data.source.local.database.UserDatabase
 import com.projectgithub.data.source.remote.network.ApiConfig
 import com.projectgithub.databinding.FragmentFollowingBinding
 import com.projectgithub.presentation.ViewModelProviderFactory
@@ -20,6 +21,7 @@ class FollowingFragment : Fragment(R.layout.fragment_following) {
     private lateinit var followingAdapter: HomeAdapter
     private lateinit var followingViewModel: FollowingViewModel
     private lateinit var repository: Repository
+    private lateinit var userDb: UserDatabase
     private lateinit var factory: ViewModelProviderFactory
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -33,7 +35,8 @@ class FollowingFragment : Fragment(R.layout.fragment_following) {
     private fun initObserver() {
         val username = arguments?.getString("username").toString()
 
-        repository = Repository(ApiConfig.apiServices)
+        userDb = UserDatabase.getInstance(requireContext())
+        repository = Repository(ApiConfig.apiServices, userDb)
         factory = ViewModelProviderFactory(repository)
         followingViewModel = ViewModelProvider(this, factory)[FollowingViewModel::class.java]
 

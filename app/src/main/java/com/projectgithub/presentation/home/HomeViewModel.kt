@@ -22,7 +22,7 @@ class HomeViewModel constructor(private val repository: Repository) : ViewModel(
         searchUser(query)
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
+    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     fun searchUser(query: String) {
         viewModelScope.launch {
             flowOf(query)
