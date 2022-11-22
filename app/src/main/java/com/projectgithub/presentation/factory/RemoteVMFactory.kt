@@ -1,4 +1,4 @@
-package com.projectgithub.presentation
+package com.projectgithub.presentation.factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

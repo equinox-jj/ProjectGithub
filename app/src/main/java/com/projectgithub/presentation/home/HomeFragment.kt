@@ -2,13 +2,19 @@ package com.projectgithub.presentation.home
 
 import android.content.Context
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import com.projectgithub.R
 import com.projectgithub.common.Constants
@@ -17,7 +23,7 @@ import com.projectgithub.data.preferences.ThemeDataStore
 import com.projectgithub.data.repository.RemoteRepository
 import com.projectgithub.data.source.remote.network.ApiConfig
 import com.projectgithub.databinding.FragmentHomeBinding
-import com.projectgithub.presentation.RemoteVMFactory
+import com.projectgithub.presentation.factory.RemoteVMFactory
 import com.projectgithub.presentation.home.adapter.HomeAdapter
 import com.projectgithub.presentation.theme.ThemeViewModel
 import com.projectgithub.presentation.theme.ThemeViewModelFactory
@@ -41,6 +47,27 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         initObserver()
         initDarkMode()
         setupSearch()
+        setupMenu()
+    }
+
+    private fun setupMenu() {
+        binding.toolbarHome.apply {
+            val menuHost: MenuHost = this@apply
+            menuHost.addMenuProvider(object : MenuProvider {
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menuInflater.inflate(R.menu.menu_home, menu)
+                }
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    when (menuItem.itemId) {
+                        R.id.dark_mode_menu -> {
+
+                        }
+                    }
+                    return true
+                }
+            }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+        }
     }
 
     private fun initDarkMode() {

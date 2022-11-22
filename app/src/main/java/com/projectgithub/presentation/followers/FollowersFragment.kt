@@ -7,10 +7,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.projectgithub.R
 import com.projectgithub.common.Resources
 import com.projectgithub.data.repository.RemoteRepository
-import com.projectgithub.data.source.local.database.UserDatabase
 import com.projectgithub.data.source.remote.network.ApiConfig
 import com.projectgithub.databinding.FragmentFollowersBinding
-import com.projectgithub.presentation.RemoteVMFactory
+import com.projectgithub.presentation.factory.RemoteVMFactory
 import com.projectgithub.presentation.home.adapter.HomeAdapter
 
 class FollowersFragment : Fragment(R.layout.fragment_followers) {
@@ -20,8 +19,6 @@ class FollowersFragment : Fragment(R.layout.fragment_followers) {
 
     private lateinit var followersAdapter: HomeAdapter
     private lateinit var followersViewModel: FollowersViewModel
-    private lateinit var remoteRepository: RemoteRepository
-    private lateinit var factory: RemoteVMFactory
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -7,10 +7,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.projectgithub.R
 import com.projectgithub.common.Resources
 import com.projectgithub.data.repository.RemoteRepository
-import com.projectgithub.data.source.local.database.UserDatabase
 import com.projectgithub.data.source.remote.network.ApiConfig
 import com.projectgithub.databinding.FragmentFollowingBinding
-import com.projectgithub.presentation.RemoteVMFactory
+import com.projectgithub.presentation.factory.RemoteVMFactory
 import com.projectgithub.presentation.home.adapter.HomeAdapter
 
 class FollowingFragment : Fragment(R.layout.fragment_following) {
