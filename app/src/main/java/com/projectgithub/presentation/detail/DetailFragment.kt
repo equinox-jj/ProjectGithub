@@ -5,7 +5,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -68,7 +67,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                 override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                     menuInflater.inflate(R.menu.menu_detail, menu)
                     savedMenuItem = menu.findItem(R.id.fav_menu)
-                    checkFavUser(savedMenuItem)
+                    checkIsUserSaved(savedMenuItem)
                 }
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -128,11 +127,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                     response.data?.let { initView(it) }
                 }
                 is Resources.Error -> {
-                    Toast.makeText(
-                        context,
-                        "Check your internet connection",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showErrorSnackBar(username)
                 }
             }
         }
@@ -163,11 +158,10 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                     url = it.htmlUrl
                 )
             }
-            setupOnRefresh(data!!.login)
         }
     }
 
-    private fun checkFavUser(savedMenuItem: MenuItem) {
+    private fun checkIsUserSaved(savedMenuItem: MenuItem) {
         detailViewModel.getUser.observe(viewLifecycleOwner) { entity ->
             try {
                 entity.forEach { result ->
@@ -201,15 +195,6 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         item.icon?.setTint(ContextCompat.getColor(requireContext(), color))
     }
 
-    private fun setupOnRefresh(username: String) {
-        binding.apply {
-//            refreshDetail.setOnRefreshListener {
-//                detailViewModel.onRefresh(username)
-//                refreshDetail.isRefreshing = false
-//            }
-        }
-    }
-
     private fun showSnackBarFavorite(message: String) {
         Snackbar.make(
             binding.constraintDet,
@@ -217,6 +202,16 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             Snackbar.LENGTH_SHORT
         ).setAction("Okay") {}
             .show()
+    }
+
+    private fun showErrorSnackBar(username: String) {
+        Snackbar.make(
+            requireView(),
+            "Error when loading data.",
+            Snackbar.LENGTH_INDEFINITE
+        ).setAction("Retry") {
+            detailViewModel.onRefresh(username)
+        }.setAnchorView(binding.clDet).show()
     }
 
     override fun onDestroyView() {
