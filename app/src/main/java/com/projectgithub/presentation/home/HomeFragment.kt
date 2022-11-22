@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -45,7 +46,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         initRecycler()
         initObserver()
-        initDarkMode()
         setupSearch()
         setupMenu()
     }
@@ -56,12 +56,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             menuHost.addMenuProvider(object : MenuProvider {
                 override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                     menuInflater.inflate(R.menu.menu_home, menu)
+                    initDarkMode(menu)
                 }
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     when (menuItem.itemId) {
                         R.id.dark_mode_menu -> {
-
+                            menuItem.isChecked = !menuItem.isChecked
+                            checkIsDarkMode(menuItem, menuItem.isChecked)
                         }
                     }
                     return true
@@ -70,13 +72,29 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun initDarkMode() {
+    private fun initDarkMode(menu: Menu) {
         val themeDataStore = ThemeDataStore.getInstance(requireContext().dataStore)
         val themeFactory = ThemeViewModelFactory(themeDataStore)
         themeViewModel = ViewModelProvider(this, themeFactory)[ThemeViewModel::class.java]
 
-        themeViewModel.getDarkModeKey.observe(viewLifecycleOwner) {
+        themeViewModel.getDarkModeKey.observe(viewLifecycleOwner) { isDarkMode ->
+            if (isDarkMode) {
+                checkIsDarkMode(menu.findItem(R.id.dark_mode_menu), true)
+            } else {
+                checkIsDarkMode(menu.findItem(R.id.dark_mode_menu), false)
+            }
+        }
+    }
 
+    private fun checkIsDarkMode(menuItem: MenuItem, isDarkMode: Boolean) {
+        if (isDarkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            themeViewModel.saveDarkModeKey(true)
+            menuItem.setIcon(R.drawable.ic_moon_24)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            themeViewModel.saveDarkModeKey(false)
+            menuItem.setIcon(R.drawable.ic_sun_24)
         }
     }
 
