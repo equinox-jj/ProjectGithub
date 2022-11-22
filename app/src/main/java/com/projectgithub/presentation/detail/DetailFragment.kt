@@ -20,13 +20,14 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import com.projectgithub.R
 import com.projectgithub.common.Resources
-import com.projectgithub.data.Repository
 import com.projectgithub.data.model.DetailResponse
+import com.projectgithub.data.repository.LocalRepository
+import com.projectgithub.data.repository.RemoteRepository
 import com.projectgithub.data.source.local.database.UserDatabase
 import com.projectgithub.data.source.local.entity.UserEntity
 import com.projectgithub.data.source.remote.network.ApiConfig
 import com.projectgithub.databinding.FragmentDetailBinding
-import com.projectgithub.presentation.ViewModelProviderFactory
+import com.projectgithub.presentation.LocalVMFactory
 import com.projectgithub.presentation.detail.adapter.ViewPagerAdapter
 import com.projectgithub.presentation.followers.FollowersFragment
 import com.projectgithub.presentation.following.FollowingFragment
@@ -37,11 +38,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     private val binding get() = _binding!!
 
     private val args by navArgs<DetailFragmentArgs>()
-
     private lateinit var detailViewModel: DetailViewModel
-    private lateinit var repository: Repository
-    private lateinit var userDb: UserDatabase
-    private lateinit var factory: ViewModelProviderFactory
 
     private lateinit var userEntity: UserEntity
     private lateinit var savedMenuItem: MenuItem
@@ -106,12 +103,12 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     private fun initObserver() {
         val username = args.username
+        val userDb = UserDatabase.getInstance(requireContext())
+        val remoteRepository = RemoteRepository(ApiConfig.apiServices)
+        val localRepository = LocalRepository(userDb)
+        val factory = LocalVMFactory(remoteRepository, localRepository)
 
-        userDb = UserDatabase.getInstance(requireContext())
-        repository = Repository(ApiConfig.apiServices, userDb)
-        factory = ViewModelProviderFactory(repository)
         detailViewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
-
         detailViewModel.getUserByName(username)
         detailViewModel.state.observe(viewLifecycleOwner) { response ->
             when (response) {

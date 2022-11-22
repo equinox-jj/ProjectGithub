@@ -1,19 +1,28 @@
 package com.projectgithub.presentation.home
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.projectgithub.R
+import com.projectgithub.common.Constants
 import com.projectgithub.common.Resources
-import com.projectgithub.data.Repository
-import com.projectgithub.data.source.local.database.UserDatabase
+import com.projectgithub.data.preferences.ThemeDataStore
+import com.projectgithub.data.repository.RemoteRepository
 import com.projectgithub.data.source.remote.network.ApiConfig
 import com.projectgithub.databinding.FragmentHomeBinding
-import com.projectgithub.presentation.ViewModelProviderFactory
+import com.projectgithub.presentation.RemoteVMFactory
 import com.projectgithub.presentation.home.adapter.HomeAdapter
+import com.projectgithub.presentation.theme.ThemeViewModel
+import com.projectgithub.presentation.theme.ThemeViewModelFactory
+
+private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(Constants.PREF_NAME)
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
@@ -22,9 +31,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private lateinit var homeAdapter: HomeAdapter
     private lateinit var homeViewModel: HomeViewModel
-    private lateinit var repository: Repository
-    private lateinit var userDb: UserDatabase
-    private lateinit var factory: ViewModelProviderFactory
+    private lateinit var themeViewModel: ThemeViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -32,7 +39,18 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         initRecycler()
         initObserver()
+        initDarkMode()
         setupSearch()
+    }
+
+    private fun initDarkMode() {
+        val themeDataStore = ThemeDataStore.getInstance(requireContext().dataStore)
+        val themeFactory = ThemeViewModelFactory(themeDataStore)
+        themeViewModel = ViewModelProvider(this, themeFactory)[ThemeViewModel::class.java]
+
+        themeViewModel.getDarkModeKey.observe(viewLifecycleOwner) {
+
+        }
     }
 
     private fun setupSearch() {
@@ -78,11 +96,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun initObserver() {
-        userDb = UserDatabase.getInstance(requireContext())
-        repository = Repository(ApiConfig.apiServices, userDb)
-        factory = ViewModelProviderFactory(repository)
+        val remoteRepository = RemoteRepository(ApiConfig.apiServices)
+        val factory = RemoteVMFactory(remoteRepository)
         homeViewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
-
         homeViewModel.state.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resources.Loading -> {

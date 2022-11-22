@@ -1,4 +1,4 @@
-package com.projectgithub.data
+package com.projectgithub.data.repository
 
 import com.projectgithub.common.Resources
 import com.projectgithub.data.model.DetailResponse
@@ -11,10 +11,7 @@ import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
 
-class Repository constructor(
-    private val apiServices: ApiServices,
-    private val userDb: UserDatabase
-    ) {
+class RemoteRepository constructor(private val apiServices: ApiServices) {
 
     fun searchUser(query: String): Flow<Resources<List<ResultItem>>> = flow {
         emit(Resources.Loading())
@@ -71,10 +68,5 @@ class Repository constructor(
             emit(Resources.Error(e.localizedMessage ?: ""))
         }
     }
-
-    val getUser: Flow<List<UserEntity>> = userDb.userDao().getUser()
-    suspend fun insertUser(entity: UserEntity) = userDb.userDao().insertUser(entity)
-    suspend fun deleteUser(entity: UserEntity) = userDb.userDao().deleteUser(entity)
-    suspend fun deleteAllUser() = userDb.userDao().deleteAllUser()
 
 }

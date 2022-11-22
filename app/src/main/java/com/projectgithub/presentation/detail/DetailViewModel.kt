@@ -2,19 +2,23 @@ package com.projectgithub.presentation.detail
 
 import androidx.lifecycle.*
 import com.projectgithub.common.Resources
-import com.projectgithub.data.Repository
 import com.projectgithub.data.model.DetailResponse
+import com.projectgithub.data.repository.LocalRepository
+import com.projectgithub.data.repository.RemoteRepository
 import com.projectgithub.data.source.local.entity.UserEntity
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
-class DetailViewModel constructor(private val repository: Repository) : ViewModel() {
+class DetailViewModel constructor(
+    private val remoteRepository: RemoteRepository,
+    private val localRepository: LocalRepository,
+) : ViewModel() {
 
     private val _state = MutableLiveData<Resources<DetailResponse>>()
     val state: LiveData<Resources<DetailResponse>> = _state
 
-    val getUser = repository.getUser.asLiveData()
+    val getUser = localRepository.getUser.asLiveData()
 
     fun onRefresh(username: String) {
         getUserByName(username)
@@ -22,7 +26,7 @@ class DetailViewModel constructor(private val repository: Repository) : ViewMode
 
     fun getUserByName(username: String) {
         viewModelScope.launch {
-            repository.getUserByName(username)
+            remoteRepository.getUserByName(username)
                 .onStart {
                     _state.value = Resources.Loading()
                 }
@@ -41,13 +45,13 @@ class DetailViewModel constructor(private val repository: Repository) : ViewMode
 
     fun insertUser(entity: UserEntity) {
         viewModelScope.launch {
-            repository.insertUser(entity)
+            localRepository.insertUser(entity)
         }
     }
 
     fun deleteUser(entity: UserEntity) {
         viewModelScope.launch {
-            repository.deleteUser(entity)
+            localRepository.deleteUser(entity)
         }
     }
 

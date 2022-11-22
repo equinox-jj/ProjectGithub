@@ -6,11 +6,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.projectgithub.R
 import com.projectgithub.common.Resources
-import com.projectgithub.data.Repository
+import com.projectgithub.data.repository.RemoteRepository
 import com.projectgithub.data.source.local.database.UserDatabase
 import com.projectgithub.data.source.remote.network.ApiConfig
 import com.projectgithub.databinding.FragmentFollowersBinding
-import com.projectgithub.presentation.ViewModelProviderFactory
+import com.projectgithub.presentation.RemoteVMFactory
 import com.projectgithub.presentation.home.adapter.HomeAdapter
 
 class FollowersFragment : Fragment(R.layout.fragment_followers) {
@@ -20,9 +20,8 @@ class FollowersFragment : Fragment(R.layout.fragment_followers) {
 
     private lateinit var followersAdapter: HomeAdapter
     private lateinit var followersViewModel: FollowersViewModel
-    private lateinit var repository: Repository
-    private lateinit var userDb: UserDatabase
-    private lateinit var factory: ViewModelProviderFactory
+    private lateinit var remoteRepository: RemoteRepository
+    private lateinit var factory: RemoteVMFactory
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -34,13 +33,10 @@ class FollowersFragment : Fragment(R.layout.fragment_followers) {
 
     private fun initObserver() {
         val username = arguments?.getString("username").toString()
-
-        userDb = UserDatabase.getInstance(requireContext())
-        repository = Repository(ApiConfig.apiServices, userDb)
-        factory = ViewModelProviderFactory(repository)
-        followersViewModel = ViewModelProvider(this, factory)[FollowersViewModel::class.java]
-
+        val remoteRepository = RemoteRepository(ApiConfig.apiServices)
+        val factory = RemoteVMFactory(remoteRepository)
         setupOnRefresh(username)
+        followersViewModel = ViewModelProvider(this, factory)[FollowersViewModel::class.java]
         followersViewModel.getFollowers(username)
         followersViewModel.state.observe(viewLifecycleOwner) { response ->
             when (response) {
