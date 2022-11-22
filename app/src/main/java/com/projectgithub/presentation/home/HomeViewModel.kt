@@ -26,15 +26,10 @@ class HomeViewModel constructor(private val repository: Repository) : ViewModel(
     fun searchUser(query: String) {
         viewModelScope.launch {
             flowOf(query)
-                .debounce(300)
+                .debounce(700)
                 .filter { it.trim().isEmpty().not() }
                 .distinctUntilChanged()
-                .flatMapLatest { query ->
-                    repository.searchUser(query)
-                        .catch {
-                            _state.value = Resources.Error(it.message ?: "")
-                        }
-                }
+                .flatMapLatest { repository.searchUser(it) }
                 .flowOn(Dispatchers.Default)
                 .collect {
                     if (it is Resources.Success) {
