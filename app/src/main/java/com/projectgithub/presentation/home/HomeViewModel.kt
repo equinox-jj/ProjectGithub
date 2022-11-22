@@ -7,10 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.projectgithub.common.Resources
 import com.projectgithub.data.Repository
 import com.projectgithub.data.model.ResultItem
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class HomeViewModel constructor(private val repository: Repository) : ViewModel() {
@@ -18,35 +18,30 @@ class HomeViewModel constructor(private val repository: Repository) : ViewModel(
     private val _state = MutableLiveData<Resources<List<ResultItem>>>()
     val state: LiveData<Resources<List<ResultItem>>> = _state
 
-    private var searchJob: Job? = null
-
     fun onRefresh(query: String) {
         searchUser(query)
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     fun searchUser(query: String) {
-        searchJob?.cancel()
-        searchJob = viewModelScope.launch {
-            delay(800L)
-            repository.searchUser(query)
-                .onStart {
-                    _state.value = Resources.Loading()
+        viewModelScope.launch {
+            flowOf(query)
+                .debounce(300)
+                .filter { it.trim().isEmpty().not() }
+                .distinctUntilChanged()
+                .flatMapLatest { query ->
+                    repository.searchUser(query)
+                        .catch {
+                            _state.value = Resources.Error(it.message ?: "")
+                        }
                 }
-                .catch { error ->
-                    error.message?.let { message ->
-                        _state.value = Resources.Error(message)
+                .flowOn(Dispatchers.Default)
+                .collect {
+                    if (it is Resources.Success) {
+                        it.data
                     }
-                }
-                .collect { result ->
-                    result.data?.let { data ->
-                        _state.value = Resources.Success(data)
-                    }
+                    _state.value = it
                 }
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        searchJob?.cancel()
     }
 }
