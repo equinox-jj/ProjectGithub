@@ -14,6 +14,7 @@
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/ctlDet"
+            style="@style/TextAppearance.Material3.ActionBar.Title"
             android:layout_width="match_parent"
             android:layout_height="350dp"
             app:expandedTitleTextColor="@color/grey_light"

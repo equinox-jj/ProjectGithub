@@ -115,12 +115,10 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                 is Resources.Loading -> {
                     binding.pbDet.visibility = View.VISIBLE
                     binding.constraintDet.visibility = View.GONE
-                    binding.ablDet.visibility = View.GONE
                 }
                 is Resources.Success -> {
                     binding.pbDet.visibility = View.GONE
                     binding.constraintDet.visibility = View.VISIBLE
-                    binding.ablDet.visibility = View.VISIBLE
                     response.data?.let { initView(it) }
                 }
                 is Resources.Error -> {
