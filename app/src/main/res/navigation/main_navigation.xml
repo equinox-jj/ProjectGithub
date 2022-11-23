@@ -27,4 +27,15 @@
     </fragment>
 
 
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="com.projectgithub.presentation.favorite.FavoriteFragment"
+        android:label="Favorite"
+        tools:layout="@layout/fragment_favorite" >
+        <action
+            android:id="@+id/action_favoriteFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
+    </fragment>
+
+
 </navigation>

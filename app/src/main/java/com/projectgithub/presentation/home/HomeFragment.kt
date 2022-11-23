@@ -19,6 +19,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.projectgithub.R
 import com.projectgithub.common.Constants
 import com.projectgithub.common.Resources
@@ -57,6 +59,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun setupToolbar() {
         binding.toolbarHome.apply {
+            setupWithNavController(findNavController())
+
             val menuHost: MenuHost = this@apply
             menuHost.addMenuProvider(object : MenuProvider {
                 override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
