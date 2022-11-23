@@ -13,6 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.setupWithNavController
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.google.android.material.snackbar.Snackbar
@@ -56,7 +57,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     private fun setupToolbar() {
         binding.toolbarDet.apply {
             setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_new_24)
-
+            setupWithNavController(findNavController())
 
             val menuHost: MenuHost = this@apply
             menuHost.addMenuProvider(object : MenuProvider {
@@ -212,6 +213,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        changeFavMenuColor(savedMenuItem, R.color.grey)
         _binding = null
     }
 }
