@@ -10,14 +10,14 @@ import com.projectgithub.data.repository.RemoteRepository
 import com.projectgithub.data.source.remote.network.ApiConfig
 import com.projectgithub.databinding.FragmentFollowersBinding
 import com.projectgithub.presentation.factory.RemoteVMFactory
-import com.projectgithub.presentation.home.adapter.HomeAdapter
+import com.projectgithub.presentation.followers.adapter.FollowAdapter
 
 class FollowersFragment : Fragment(R.layout.fragment_followers) {
 
     private var _binding: FragmentFollowersBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var followersAdapter: HomeAdapter
+    private lateinit var followersAdapter: FollowAdapter
     private lateinit var followersViewModel: FollowersViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -62,7 +62,7 @@ class FollowersFragment : Fragment(R.layout.fragment_followers) {
 
     private fun initRecycler() {
         binding.apply {
-            followersAdapter = HomeAdapter()
+            followersAdapter = FollowAdapter()
             rvFollowers.adapter = followersAdapter
             rvFollowers.setHasFixedSize(true)
         }

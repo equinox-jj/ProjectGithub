@@ -10,14 +10,14 @@ import com.projectgithub.data.repository.RemoteRepository
 import com.projectgithub.data.source.remote.network.ApiConfig
 import com.projectgithub.databinding.FragmentFollowingBinding
 import com.projectgithub.presentation.factory.RemoteVMFactory
-import com.projectgithub.presentation.home.adapter.HomeAdapter
+import com.projectgithub.presentation.followers.adapter.FollowAdapter
 
 class FollowingFragment : Fragment(R.layout.fragment_following) {
 
     private var _binding: FragmentFollowingBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var followingAdapter: HomeAdapter
+    private lateinit var followingAdapter: FollowAdapter
     private lateinit var followingViewModel: FollowingViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -62,7 +62,7 @@ class FollowingFragment : Fragment(R.layout.fragment_following) {
 
     private fun initRecycler() {
         binding.apply {
-            followingAdapter = HomeAdapter()
+            followingAdapter = FollowAdapter()
             rvFollowing.adapter = followingAdapter
             rvFollowing.setHasFixedSize(true)
         }
