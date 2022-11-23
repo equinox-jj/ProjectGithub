@@ -3,8 +3,6 @@ package com.projectgithub.data.repository
 import com.projectgithub.common.Resources
 import com.projectgithub.data.model.DetailResponse
 import com.projectgithub.data.model.ResultItem
-import com.projectgithub.data.source.local.database.UserDatabase
-import com.projectgithub.data.source.local.entity.UserEntity
 import com.projectgithub.data.source.remote.network.ApiServices
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

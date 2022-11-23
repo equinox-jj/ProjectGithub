@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.projectgithub.common.Resources
-import com.projectgithub.data.repository.RemoteRepository
 import com.projectgithub.data.model.ResultItem
+import com.projectgithub.data.repository.RemoteRepository
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch

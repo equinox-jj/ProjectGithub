@@ -18,9 +18,11 @@ class HomeVH(private val binding: ItemUserListBinding) : RecyclerView.ViewHolder
             tvName.text = data?.login
             tvUsername.text = data?.htmlUrl
 
-            cardViewUser.setOnClickListener {
+            cardViewUser.setOnClickListener { view ->
                 val action = data?.let { HomeFragmentDirections.actionHomeFragmentToDetailFragment(it.login) }
-                if (action != null) { it.findNavController().navigate(action) }
+                if (action != null) {
+                    view.findNavController().navigate(action)
+                }
             }
         }
     }

@@ -13,7 +13,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.ui.setupWithNavController
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.google.android.material.snackbar.Snackbar
@@ -28,7 +27,7 @@ import com.projectgithub.data.source.local.entity.UserEntity
 import com.projectgithub.data.source.remote.network.ApiConfig
 import com.projectgithub.databinding.FragmentDetailBinding
 import com.projectgithub.presentation.detail.adapter.ViewPagerAdapter
-import com.projectgithub.presentation.factory.LocalVMFactory
+import com.projectgithub.presentation.factory.ViewModelFactory
 import com.projectgithub.presentation.followers.FollowersFragment
 import com.projectgithub.presentation.following.FollowingFragment
 
@@ -57,7 +56,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     private fun setupToolbar() {
         binding.toolbarDet.apply {
             setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_new_24)
-            setupWithNavController(findNavController())
+
 
             val menuHost: MenuHost = this@apply
             menuHost.addMenuProvider(object : MenuProvider {
@@ -106,7 +105,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         val userDb = UserDatabase.getInstance(requireContext())
         val remoteRepository = RemoteRepository(ApiConfig.apiServices)
         val localRepository = LocalRepository(userDb)
-        val factory = LocalVMFactory(remoteRepository, localRepository)
+        val factory = ViewModelFactory(remoteRepository, localRepository)
 
         detailViewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
         detailViewModel.getUserByName(username)
@@ -145,7 +144,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             tvLocationDet.text = data?.location
             tvRepository.text = data?.publicRepos.toString()
             tvFollowers.text = data?.followers.toString()
-            tvFollowers.text = data?.following.toString()
+            tvFollowing.text = data?.following.toString()
 
             data?.let {
                 userEntity = UserEntity(
