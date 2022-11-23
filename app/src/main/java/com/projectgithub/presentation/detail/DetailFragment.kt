@@ -27,8 +27,8 @@ import com.projectgithub.data.source.local.database.UserDatabase
 import com.projectgithub.data.source.local.entity.UserEntity
 import com.projectgithub.data.source.remote.network.ApiConfig
 import com.projectgithub.databinding.FragmentDetailBinding
-import com.projectgithub.presentation.factory.LocalVMFactory
 import com.projectgithub.presentation.detail.adapter.ViewPagerAdapter
+import com.projectgithub.presentation.factory.LocalVMFactory
 import com.projectgithub.presentation.followers.FollowersFragment
 import com.projectgithub.presentation.following.FollowingFragment
 
