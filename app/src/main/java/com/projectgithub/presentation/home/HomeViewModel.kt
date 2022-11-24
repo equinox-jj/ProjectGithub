@@ -26,7 +26,7 @@ class HomeViewModel constructor(private val remoteRepository: RemoteRepository) 
     fun searchUser(query: String) {
         viewModelScope.launch {
             flowOf(query)
-                .debounce(700)
+                .debounce(800)
                 .filter { it.trim().isEmpty().not() }
                 .distinctUntilChanged()
                 .flatMapLatest { remoteRepository.searchUser(it) }
