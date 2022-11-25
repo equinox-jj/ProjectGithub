@@ -5,6 +5,8 @@ import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.projectgithub.R
 import com.projectgithub.databinding.FragmentSettingsBinding
 import com.projectgithub.presentation.factory.ViewModelFactory
@@ -21,6 +23,14 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         _binding = FragmentSettingsBinding.bind(view)
 
         initObserver()
+        setupToolbar()
+    }
+
+    private fun setupToolbar() {
+        binding.toolbarSettings.apply {
+            setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_new_24)
+            setupWithNavController(findNavController())
+        }
     }
 
     private fun initObserver() {
