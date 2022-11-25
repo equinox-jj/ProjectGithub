@@ -17,8 +17,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.projectgithub.R
 import com.projectgithub.common.Constants
 import com.projectgithub.common.Resources
@@ -30,8 +29,6 @@ import com.projectgithub.presentation.factory.RemoteVMFactory
 import com.projectgithub.presentation.home.adapter.HomeAdapter
 import com.projectgithub.presentation.theme.ThemeViewModel
 import com.projectgithub.presentation.theme.ThemeViewModelFactory
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(Constants.PREF_NAME)
 
@@ -50,7 +47,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         initRecycler()
         initObserver()
-        initDarkMode()
         setupSearch()
         setupToolbar()
     }
@@ -61,46 +57,19 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             menuHost.addMenuProvider(object : MenuProvider {
                 override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                     menuInflater.inflate(R.menu.menu_home, menu)
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                            val isDarkMode = themeViewModel.getDarkModeKey.first()
-                            val menuItem = menu.findItem(R.id.dark_mode_menu)
-                            menuItem.isChecked = isDarkMode
-                            checkIsDarkMode(menuItem, isDarkMode)
-                        }
-                    }
                 }
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                    return when (menuItem.itemId) {
-                        R.id.dark_mode_menu -> {
-                            menuItem.isChecked = !menuItem.isChecked
-                            checkIsDarkMode(menuItem, menuItem.isChecked)
-                            true
+                    when (menuItem.itemId) {
+                        R.id.settings_menu -> {
+                            val action =
+                                HomeFragmentDirections.actionHomeFragmentToSettingsFragment()
+                            findNavController().navigate(action)
                         }
-                        else -> false
                     }
+                    return true
                 }
             }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-        }
-    }
-
-    private fun initDarkMode() {
-        val themeDataStore = ThemeDataStore.getInstance(requireContext().dataStore)
-        val themeFactory = ThemeViewModelFactory(themeDataStore)
-
-        themeViewModel = ViewModelProvider(this, themeFactory)[ThemeViewModel::class.java]
-    }
-
-    private fun checkIsDarkMode(menuItem: MenuItem, isDarkMode: Boolean) {
-        if (isDarkMode) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            themeViewModel.saveDarkModeKey(true)
-            menuItem.setIcon(R.drawable.ic_moon_24)
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            themeViewModel.saveDarkModeKey(false)
-            menuItem.setIcon(R.drawable.ic_sun_24)
         }
     }
 
@@ -147,6 +116,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun initObserver() {
+        val themeDataStore = ThemeDataStore.getInstance(requireContext().dataStore)
+        val themeFactory = ThemeViewModelFactory(themeDataStore)
+        themeViewModel = ViewModelProvider(this, themeFactory)[ThemeViewModel::class.java]
+        themeViewModel.getDarkModeKey.observe(viewLifecycleOwner) { isDarkMode ->
+            if (isDarkMode) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+
         val remoteRepository = RemoteRepository(ApiConfig.apiServices)
         val factory = RemoteVMFactory(remoteRepository)
         homeViewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]

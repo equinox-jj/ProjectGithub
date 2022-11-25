@@ -9,6 +9,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.projectgithub.R
 import com.projectgithub.databinding.ActivityMainBinding
+import com.projectgithub.presentation.theme.ThemeViewModel
 
 class MainActivity : AppCompatActivity() {
 
