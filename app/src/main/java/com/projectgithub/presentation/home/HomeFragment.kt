@@ -1,6 +1,5 @@
 package com.projectgithub.presentation.home
 
-import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -11,26 +10,19 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.projectgithub.R
-import com.projectgithub.common.Constants
 import com.projectgithub.common.Resources
-import com.projectgithub.data.preferences.ThemeDataStore
-import com.projectgithub.data.repository.RemoteRepository
-import com.projectgithub.data.source.remote.network.ApiConfig
+import com.projectgithub.common.setVisibilityGone
+import com.projectgithub.common.setVisibilityVisible
 import com.projectgithub.databinding.FragmentHomeBinding
-import com.projectgithub.presentation.factory.RemoteVMFactory
+import com.projectgithub.presentation.factory.ViewModelFactory
 import com.projectgithub.presentation.home.adapter.HomeAdapter
-import com.projectgithub.presentation.theme.ThemeViewModel
-import com.projectgithub.presentation.theme.ThemeViewModelFactory
-
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(Constants.PREF_NAME)
+import com.projectgithub.presentation.settings.SettingsViewModel
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
@@ -38,8 +30,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val binding get() = _binding!!
 
     private lateinit var homeAdapter: HomeAdapter
-    private lateinit var homeViewModel: HomeViewModel
-    private lateinit var themeViewModel: ThemeViewModel
+    private val homeViewModel by viewModels<HomeViewModel> { ViewModelFactory.getInstance(requireContext()) }
+    private val settingsViewModel by activityViewModels<SettingsViewModel> { ViewModelFactory.getInstance(requireContext()) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -116,66 +108,76 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun initObserver() {
-        val themeDataStore = ThemeDataStore.getInstance(requireContext().dataStore)
-        val themeFactory = ThemeViewModelFactory(themeDataStore)
-        themeViewModel = ViewModelProvider(this, themeFactory)[ThemeViewModel::class.java]
-        themeViewModel.getDarkModeKey.observe(viewLifecycleOwner) { isDarkMode ->
+        settingsViewModel.getDarkModeKey.observe(viewLifecycleOwner) { isDarkMode ->
             if (isDarkMode) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
-
-        val remoteRepository = RemoteRepository(ApiConfig.apiServices)
-        val factory = RemoteVMFactory(remoteRepository)
-        homeViewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
         homeViewModel.state.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resources.Loading -> {
-                    binding.pbHome.visibility = View.VISIBLE
-                    binding.rvUserList.visibility = View.INVISIBLE
-                    binding.ivSearchPerson.visibility = View.INVISIBLE
-                    binding.tvSearchText.visibility = View.INVISIBLE
-                    binding.lottieHome.visibility = View.INVISIBLE
-                    binding.tvErrorHome.visibility = View.INVISIBLE
+                    isLoadingState(true)
+                    isUserNotFound(false)
+                    isError(false)
                 }
                 is Resources.Success -> {
-                    response.data?.let {
-                        if (it.isNotEmpty()) {
-                            binding.pbHome.visibility = View.INVISIBLE
-                            binding.rvUserList.visibility = View.VISIBLE
-                            binding.ivSearchPerson.visibility = View.INVISIBLE
-                            binding.tvSearchText.visibility = View.INVISIBLE
-                            binding.lottieHome.visibility = View.INVISIBLE
-                            binding.tvErrorHome.visibility = View.INVISIBLE
-                            homeAdapter.setData(it)
-                        } else {
-                            binding.pbHome.visibility = View.INVISIBLE
-                            binding.rvUserList.visibility = View.INVISIBLE
-                            binding.ivSearchPerson.visibility = View.VISIBLE
-                            binding.tvSearchText.visibility = View.VISIBLE
-                            binding.lottieHome.visibility = View.INVISIBLE
-                            binding.tvErrorHome.visibility = View.INVISIBLE
-                            Toast.makeText(
-                                context,
-                                response.message ?: "User Not Found.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                    isLoadingState(false)
+                    isError(false)
+                    if (response.data?.isNotEmpty() == true) {
+                        isUserNotFound(false)
+                        homeAdapter.setData(response.data)
+                    } else {
+                        isUserNotFound(true)
+                        Toast.makeText(
+                            context,
+                            response.message ?: getString(R.string.user_not_found),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
                 is Resources.Error -> {
-                    binding.pbHome.visibility = View.INVISIBLE
-                    binding.rvUserList.visibility = View.INVISIBLE
-                    binding.ivSearchPerson.visibility = View.INVISIBLE
-                    binding.tvSearchText.visibility = View.INVISIBLE
-                    binding.lottieHome.visibility = View.VISIBLE
-                    binding.tvErrorHome.visibility = View.VISIBLE
+                    isLoadingState(false)
+                    isUserNotFound(false)
+                    isError(true)
                     Toast.makeText(
                         context,
-                        response.message ?: "Check Your Internet Connection.",
+                        response.message ?: getString(R.string.check_your_internet_connection),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
             }
+        }
+    }
+
+    private fun isLoadingState(isLoading: Boolean) {
+        if (isLoading) {
+            binding.pbHome.setVisibilityVisible()
+            binding.rvUserList.setVisibilityGone()
+            binding.ivSearchPerson.setVisibilityGone()
+            binding.tvSearchText.setVisibilityGone()
+        } else {
+            binding.pbHome.setVisibilityGone()
+            binding.rvUserList.setVisibilityVisible()
+        }
+    }
+
+    private fun isUserNotFound(isNotFound: Boolean) {
+        if (isNotFound) {
+            binding.rvUserList.setVisibilityGone()
+            binding.ivSearchPerson.setVisibilityVisible()
+            binding.tvSearchText.setVisibilityVisible()
+        } else {
+            binding.ivSearchPerson.setVisibilityGone()
+            binding.tvSearchText.setVisibilityGone()
+        }
+    }
+
+    private fun isError(isError: Boolean) {
+        if (isError) {
+            binding.lottieHome.setVisibilityVisible()
+            binding.tvErrorHome.setVisibilityVisible()
+        } else {
+            binding.lottieHome.setVisibilityGone()
+            binding.tvErrorHome.setVisibilityGone()
         }
     }
 

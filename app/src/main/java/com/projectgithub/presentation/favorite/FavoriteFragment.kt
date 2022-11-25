@@ -8,14 +8,14 @@ import android.view.View
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.google.android.material.snackbar.Snackbar
 import com.projectgithub.R
 import com.projectgithub.common.entityToResult
-import com.projectgithub.data.repository.LocalRepository
-import com.projectgithub.data.source.local.database.UserDatabase
+import com.projectgithub.common.setVisibilityGone
+import com.projectgithub.common.setVisibilityVisible
 import com.projectgithub.databinding.FragmentFavoriteBinding
-import com.projectgithub.presentation.factory.LocalVMFactory
+import com.projectgithub.presentation.factory.ViewModelFactory
 import com.projectgithub.presentation.favorite.adapter.FavoriteAdapter
 
 class FavoriteFragment : Fragment(R.layout.fragment_favorite) {
@@ -23,7 +23,7 @@ class FavoriteFragment : Fragment(R.layout.fragment_favorite) {
     private var _binding: FragmentFavoriteBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var favoriteViewModel: FavoriteViewModel
+    private val favoriteViewModel by viewModels<FavoriteViewModel> { ViewModelFactory.getInstance(requireContext()) }
     private lateinit var favoriteAdapter: FavoriteAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -44,23 +44,25 @@ class FavoriteFragment : Fragment(R.layout.fragment_favorite) {
     }
 
     private fun initObserver() {
-        val userDb = UserDatabase.getInstance(requireContext())
-        val localRepository = LocalRepository(userDb)
-        val factory = LocalVMFactory(localRepository)
-
-        favoriteViewModel = ViewModelProvider(this, factory)[FavoriteViewModel::class.java]
         favoriteViewModel.getUser.observe(viewLifecycleOwner) { userEntity ->
             if (userEntity.isNotEmpty()) {
-                binding.rvFavorite.visibility = View.VISIBLE
-                binding.lottieFavorite.visibility = View.INVISIBLE
-                binding.tvFavorite.visibility = View.INVISIBLE
+                checkFavoriteUser(true)
                 favoriteAdapter.setData(userEntity.map { it.entityToResult() })
-
             } else {
-                binding.rvFavorite.visibility = View.INVISIBLE
-                binding.lottieFavorite.visibility = View.VISIBLE
-                binding.tvFavorite.visibility = View.VISIBLE
+                checkFavoriteUser(false)
             }
+        }
+    }
+
+    private fun checkFavoriteUser(isDataFound: Boolean) {
+        if (isDataFound) {
+            binding.rvFavorite.setVisibilityVisible()
+            binding.lottieFavorite.setVisibilityGone()
+            binding.tvFavorite.setVisibilityGone()
+        } else {
+            binding.rvFavorite.setVisibilityGone()
+            binding.lottieFavorite.setVisibilityVisible()
+            binding.tvFavorite.setVisibilityVisible()
         }
     }
 
@@ -88,9 +90,9 @@ class FavoriteFragment : Fragment(R.layout.fragment_favorite) {
     private fun showSnackBar() {
         Snackbar.make(
             binding.root,
-            "All User Removed.",
+            getString(R.string.all_user_removed),
             Snackbar.LENGTH_SHORT
-        ).setAction("Okay.") {}
+        ).setAction(getString(R.string.okay)) {}
             .show()
     }
 

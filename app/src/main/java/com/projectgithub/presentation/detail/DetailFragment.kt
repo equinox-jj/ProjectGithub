@@ -10,8 +10,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.setupWithNavController
@@ -20,13 +20,12 @@ import coil.transform.CircleCropTransformation
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import com.projectgithub.R
+import com.projectgithub.common.Constants.NAME_ARGS
 import com.projectgithub.common.Resources
+import com.projectgithub.common.setVisibilityGone
+import com.projectgithub.common.setVisibilityVisible
 import com.projectgithub.data.model.DetailResponse
-import com.projectgithub.data.repository.LocalRepository
-import com.projectgithub.data.repository.RemoteRepository
-import com.projectgithub.data.source.local.database.UserDatabase
 import com.projectgithub.data.source.local.entity.UserEntity
-import com.projectgithub.data.source.remote.network.ApiConfig
 import com.projectgithub.databinding.FragmentDetailBinding
 import com.projectgithub.presentation.detail.adapter.ViewPagerAdapter
 import com.projectgithub.presentation.factory.ViewModelFactory
@@ -39,7 +38,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     private val binding get() = _binding!!
 
     private val args by navArgs<DetailFragmentArgs>()
-    private lateinit var detailViewModel: DetailViewModel
+    private val detailViewModel by viewModels<DetailViewModel> { ViewModelFactory.getInstance(requireContext()) }
 
     private lateinit var userEntity: UserEntity
     private lateinit var savedMenuItem: MenuItem
@@ -93,15 +92,15 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         val viewPager = binding.vpDet
 
         val bundle = Bundle()
-        bundle.putString("username", args.username)
+        bundle.putString(NAME_ARGS, args.username)
 
         val fragmentTabs = ArrayList<Fragment>()
         fragmentTabs.add(FollowersFragment())
         fragmentTabs.add(FollowingFragment())
 
         val titles = ArrayList<String>()
-        titles.add("Followers")
-        titles.add("Following")
+        titles.add(getString(R.string.followers))
+        titles.add(getString(R.string.following))
 
         viewPager.adapter = ViewPagerAdapter(bundle, fragmentTabs, fragment = this@DetailFragment)
 
@@ -112,25 +111,18 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     private fun initObserver() {
         val username = args.username
-        val userDb = UserDatabase.getInstance(requireContext())
-        val remoteRepository = RemoteRepository(ApiConfig.apiServices)
-        val localRepository = LocalRepository(userDb)
-        val factory = ViewModelFactory(remoteRepository, localRepository)
-
-        detailViewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
         detailViewModel.getUserByName(username)
         detailViewModel.state.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resources.Loading -> {
-                    binding.pbDet.visibility = View.VISIBLE
-                    binding.constraintDet.visibility = View.GONE
+                    isLoading(true)
                 }
                 is Resources.Success -> {
-                    binding.pbDet.visibility = View.GONE
-                    binding.constraintDet.visibility = View.VISIBLE
+                    isLoading(false)
                     response.data?.let { initView(it) }
                 }
                 is Resources.Error -> {
+                    isLoading(false)
                     showErrorSnackBar(username)
                 }
             }
@@ -146,10 +138,12 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                 crossfade(800)
                 transformations(CircleCropTransformation())
             }
+            if (data?.company != null) tvCompanyDet.text = data.company.toString()
+            else tvCompanyDet.text = getString(R.string.no_data)
+            if (data?.location != null) tvLocationDet.text = data.location
+            else tvLocationDet.text = getString(R.string.no_data)
             ctlDet.title = data?.name
             tvUsernameDet.text = data?.login
-            tvCompanyDet.text = data?.company.toString()
-            tvLocationDet.text = data?.location
             tvRepository.text = data?.publicRepos.toString()
             tvFollowers.text = data?.followers.toString()
             tvFollowing.text = data?.following.toString()
@@ -162,6 +156,16 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                     url = it.htmlUrl
                 )
             }
+        }
+    }
+
+    private fun isLoading(isLoading: Boolean) {
+        if (isLoading) {
+            binding.pbDet.setVisibilityVisible()
+            binding.constraintDet.setVisibilityGone()
+        } else {
+            binding.pbDet.setVisibilityGone()
+            binding.constraintDet.setVisibilityVisible()
         }
     }
 
@@ -204,16 +208,16 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             binding.constraintDet,
             message,
             Snackbar.LENGTH_SHORT
-        ).setAction("Okay") {}
+        ).setAction(getString(R.string.okay)) {}
             .show()
     }
 
     private fun showErrorSnackBar(username: String) {
         Snackbar.make(
             requireView(),
-            "Error when loading data.",
+            getString(R.string.error_when_load_the_data),
             Snackbar.LENGTH_INDEFINITE
-        ).setAction("Retry") {
+        ).setAction(getString(R.string.retry)) {
             detailViewModel.onRefresh(username)
         }.setAnchorView(binding.clDet).show()
     }

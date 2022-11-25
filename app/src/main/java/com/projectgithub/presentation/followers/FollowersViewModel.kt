@@ -6,12 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.projectgithub.common.Resources
 import com.projectgithub.data.model.ResultItem
-import com.projectgithub.data.repository.RemoteRepository
+import com.projectgithub.data.repository.Repository
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
-class FollowersViewModel constructor(private val remoteRepository: RemoteRepository) : ViewModel() {
+class FollowersViewModel constructor(private val repository: Repository) : ViewModel() {
 
     private val _state = MutableLiveData<Resources<List<ResultItem>>>()
     val state: LiveData<Resources<List<ResultItem>>> = _state
@@ -22,7 +22,7 @@ class FollowersViewModel constructor(private val remoteRepository: RemoteReposit
 
     fun getFollowers(username: String) {
         viewModelScope.launch {
-            remoteRepository.getFollowers(username)
+            repository.getFollowers(username)
                 .onStart {
                     _state.value = Resources.Loading()
                 }

@@ -10,6 +10,8 @@ object Constants {
     const val FOLLOWERS_API = "users/{username}/followers"
     const val FOLLOWING_API = "users/{username}/following"
 
+    const val NAME_ARGS = "username"
+
     const val PREF_NAME = "theme_preferences"
     const val NIGHT_MODE_KEY = "night_mode_key"
 

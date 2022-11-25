@@ -3,13 +3,35 @@ package com.projectgithub.data.repository
 import com.projectgithub.common.Resources
 import com.projectgithub.data.model.DetailResponse
 import com.projectgithub.data.model.ResultItem
+import com.projectgithub.data.preferences.ThemeDataStore
+import com.projectgithub.data.source.local.dao.UserDao
+import com.projectgithub.data.source.local.entity.UserEntity
 import com.projectgithub.data.source.remote.network.ApiServices
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
 
-class RemoteRepository constructor(private val apiServices: ApiServices) {
+class Repository constructor(
+    private val apiServices: ApiServices,
+    private val userDao: UserDao,
+    private val themeDataStore: ThemeDataStore
+) {
+
+    companion object {
+        @Volatile
+        private var INSTANCE: Repository? = null
+
+        fun getInstance(
+            apiServices: ApiServices,
+            userDao: UserDao,
+            themeDataStore: ThemeDataStore
+        ): Repository {
+            return INSTANCE ?: synchronized(this) {
+                INSTANCE ?: Repository(apiServices, userDao, themeDataStore)
+            }
+        }
+    }
 
     fun searchUser(query: String): Flow<Resources<List<ResultItem>>> = flow {
         emit(Resources.Loading())
@@ -65,6 +87,16 @@ class RemoteRepository constructor(private val apiServices: ApiServices) {
         } catch (e: IOException) {
             emit(Resources.Error(e.localizedMessage ?: ""))
         }
+    }
+
+    val getUser: Flow<List<UserEntity>> = userDao.getUser()
+    suspend fun insertUser(entity: UserEntity) = userDao.insertUser(entity)
+    suspend fun deleteUser(entity: UserEntity) = userDao.deleteUser(entity)
+    suspend fun deleteAllUser() = userDao.deleteAllUser()
+
+    val getDarkModeKey = themeDataStore.getDarkModeKey
+    suspend fun saveDarkModeKey(isDarkMode: Boolean) {
+        themeDataStore.saveDarkModeKey(isDarkMode)
     }
 
 }
