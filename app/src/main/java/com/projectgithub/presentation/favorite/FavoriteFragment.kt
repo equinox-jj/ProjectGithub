@@ -23,7 +23,11 @@ class FavoriteFragment : Fragment(R.layout.fragment_favorite) {
     private var _binding: FragmentFavoriteBinding? = null
     private val binding get() = _binding!!
 
-    private val favoriteViewModel by viewModels<FavoriteViewModel> { ViewModelFactory.getInstance(requireContext()) }
+    private val favoriteViewModel by viewModels<FavoriteViewModel> {
+        ViewModelFactory.getInstance(
+            requireContext()
+        )
+    }
     private lateinit var favoriteAdapter: FavoriteAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,24 +71,23 @@ class FavoriteFragment : Fragment(R.layout.fragment_favorite) {
     }
 
     private fun setupToolbar() {
-        binding.toolbarFavorite.apply {
-            val menuHost: MenuHost = this@apply
-            menuHost.addMenuProvider(object : MenuProvider {
-                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                    menuInflater.inflate(R.menu.menu_favorite, menu)
-                }
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_favorite, menu)
+            }
 
-                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                    when (menuItem.itemId) {
-                        R.id.delete_all_menu -> {
-                            favoriteViewModel.deleteAllUser()
-                            showSnackBar()
-                        }
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.delete_all_menu -> {
+                        favoriteViewModel.deleteAllUser()
+                        showSnackBar()
+                        true
                     }
-                    return true
+                    else -> false
                 }
-            })
-        }
+            }
+        })
     }
 
     private fun showSnackBar() {

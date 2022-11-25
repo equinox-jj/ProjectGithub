@@ -12,9 +12,7 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.ui.setupWithNavController
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.google.android.material.snackbar.Snackbar
@@ -38,7 +36,11 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     private val binding get() = _binding!!
 
     private val args by navArgs<DetailFragmentArgs>()
-    private val detailViewModel by viewModels<DetailViewModel> { ViewModelFactory.getInstance(requireContext()) }
+    private val detailViewModel by viewModels<DetailViewModel> {
+        ViewModelFactory.getInstance(
+            requireContext()
+        )
+    }
 
     private lateinit var userEntity: UserEntity
     private lateinit var savedMenuItem: MenuItem
@@ -55,36 +57,31 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     }
 
     private fun setupToolbar() {
-        binding.toolbarDet.apply {
-            setNavigationIcon(R.drawable.ic_baseline_arrow_back_ios_new_24)
-            setupWithNavController(findNavController())
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_detail, menu)
+                savedMenuItem = menu.findItem(R.id.fav_menu)
+                checkIsUserSaved(savedMenuItem)
+            }
 
-            val menuHost: MenuHost = this@apply
-            menuHost.addMenuProvider(object : MenuProvider {
-                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                    menuInflater.inflate(R.menu.menu_detail, menu)
-                    savedMenuItem = menu.findItem(R.id.fav_menu)
-                    checkIsUserSaved(savedMenuItem)
-                }
-
-                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                    if (menuItem.itemId == R.id.fav_menu && !isUserSaved) {
-                        insertUser(menuItem)
-                    } else if (menuItem.itemId == R.id.fav_menu && isUserSaved) {
-                        deleteUser(menuItem)
-                    } else if (menuItem.itemId == R.id.share_menu) {
-                        val sendIntent: Intent = Intent().apply {
-                            action = Intent.ACTION_SEND
-                            putExtra(Intent.EXTRA_TEXT, userEntity.url)
-                            type = "text/plain"
-                        }
-                        val shareIntent = Intent.createChooser(sendIntent, null)
-                        startActivity(shareIntent)
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                if (menuItem.itemId == R.id.fav_menu && !isUserSaved) {
+                    insertUser(menuItem)
+                } else if (menuItem.itemId == R.id.fav_menu && isUserSaved) {
+                    deleteUser(menuItem)
+                } else if (menuItem.itemId == R.id.share_menu) {
+                    val sendIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TEXT, userEntity.url)
+                        type = "text/plain"
                     }
-                    return true
+                    val shareIntent = Intent.createChooser(sendIntent, null)
+                    startActivity(shareIntent)
                 }
-            }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-        }
+                return true
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun setupViewPager() {
@@ -174,7 +171,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             try {
                 entity.forEach { result ->
                     if (result.username == args.username) {
-                        changeFavMenuColor(savedMenuItem, R.color.purple_700)
+                        changeFavMenuColor(savedMenuItem, R.color.icon_favorite_color)
                         savedUsername = result.username
                         isUserSaved = true
                     }
@@ -188,14 +185,14 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     private fun insertUser(menuItem: MenuItem) {
         detailViewModel.insertUser(userEntity)
         showSnackBarFavorite("${userEntity.username} saved.")
-        changeFavMenuColor(menuItem, R.color.purple_700)
+        changeFavMenuColor(menuItem, R.color.icon_favorite_color)
         isUserSaved = true
     }
 
     private fun deleteUser(menuItem: MenuItem) {
         detailViewModel.deleteUser(userEntity)
         showSnackBarFavorite("${userEntity.username} removed.")
-        changeFavMenuColor(menuItem, R.color.grey)
+        changeFavMenuColor(menuItem, R.color.icon_toolbar_color)
         isUserSaved = false
     }
 
@@ -224,7 +221,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        changeFavMenuColor(savedMenuItem, R.color.grey)
+        changeFavMenuColor(savedMenuItem, R.color.icon_toolbar_color)
         _binding = null
     }
 }

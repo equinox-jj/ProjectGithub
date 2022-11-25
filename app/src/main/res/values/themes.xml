@@ -1,6 +1,6 @@
 <resources>
-    <!-- Base application theme. -->
-    <style name="Theme.ProjectGithub" parent="Theme.Material3.DayNight.NoActionBar">
+
+    <style name="Theme.ProjectGithub" parent="Theme.Material3.DayNight">
         <item name="colorPrimary">@color/md_theme_light_primary</item>
         <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
@@ -27,10 +27,11 @@
         <item name="colorOnSurfaceInverse">@color/md_theme_light_inverseOnSurface</item>
         <item name="colorSurfaceInverse">@color/md_theme_light_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
+        <item name="android:statusBarColor">@color/md_theme_light_onSurface</item>
     </style>
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/teal_200</item>
+        <item name="windowSplashScreenBackground">@color/splash_background_color</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
         <item name="postSplashScreenTheme">@style/Theme.ProjectGithub</item>
     </style>
@@ -38,6 +39,31 @@
     <style name="ShapeImageRoundedBottom" parent="">
         <item name="cornerSizeBottomRight">25dp</item>
         <item name="cornerSizeBottomLeft">25dp</item>
+    </style>
+
+    <style name="CardViewM3" parent="Widget.Material3.CardView.Filled">
+        <item name="cardCornerRadius">10dp</item>
+        <item name="cardElevation">3dp</item>
+    </style>
+
+    <style name="CollapsingToolbarM3" parent="Widget.Material3.CollapsingToolbar">
+
+    </style>
+
+    <style name="ToolbarM3" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@color/toolbar_color</item>
+    </style>
+
+    <style name="SearchViewM3" parent="Widget.Material3.Snackbar">
+
+    </style>
+
+    <style name="SwitchM3" parent="Widget.Material3.CompoundButton.MaterialSwitch">
+
+    </style>
+
+    <style name="ProgressBarM3" parent="Widget.Material3.CircularProgressIndicator.Medium">
+
     </style>
 
 </resources>

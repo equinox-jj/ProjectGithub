@@ -43,6 +43,7 @@
 
     <fragment
         android:id="@+id/settingsFragment"
+        android:label="Settings"
         android:name="com.projectgithub.presentation.settings.SettingsFragment"
         tools:layout="@layout/fragment_settings" />
 

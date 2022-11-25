@@ -6,33 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".presentation.settings.SettingsFragment">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbarSettings"
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            style="@style/TextAppearance.Material3.ActionBar.Title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_bold"
-            android:text="@string/settings" />
-
-    </androidx.appcompat.widget.Toolbar>
-
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switchSetting"
+        style="@style/SwitchM3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/dark_mode"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

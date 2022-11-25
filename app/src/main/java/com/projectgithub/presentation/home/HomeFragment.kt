@@ -30,8 +30,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val binding get() = _binding!!
 
     private lateinit var homeAdapter: HomeAdapter
-    private val homeViewModel by viewModels<HomeViewModel> { ViewModelFactory.getInstance(requireContext()) }
-    private val settingsViewModel by activityViewModels<SettingsViewModel> { ViewModelFactory.getInstance(requireContext()) }
+    private val homeViewModel by viewModels<HomeViewModel> {
+        ViewModelFactory.getInstance(
+            requireContext()
+        )
+    }
+    private val settingsViewModel by activityViewModels<SettingsViewModel> {
+        ViewModelFactory.getInstance(
+            requireContext()
+        )
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,25 +52,23 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun setupToolbar() {
-        binding.toolbarHome.apply {
-            val menuHost: MenuHost = this@apply
-            menuHost.addMenuProvider(object : MenuProvider {
-                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                    menuInflater.inflate(R.menu.menu_home, menu)
-                }
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_home, menu)
+            }
 
-                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                    when (menuItem.itemId) {
-                        R.id.settings_menu -> {
-                            val action =
-                                HomeFragmentDirections.actionHomeFragmentToSettingsFragment()
-                            findNavController().navigate(action)
-                        }
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.settings_menu -> {
+                        val action = HomeFragmentDirections.actionHomeFragmentToSettingsFragment()
+                        findNavController().navigate(action)
+                        true
                     }
-                    return true
+                    else -> false
                 }
-            }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-        }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun setupSearch() {

@@ -6,23 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".presentation.favorite.FavoriteFragment">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbarFavorite"
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            style="@style/TextAppearance.Material3.ActionBar.Title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_bold"
-            android:text="@string/favorite" />
-
-    </androidx.appcompat.widget.Toolbar>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvFavorite"
         android:layout_width="0dp"
@@ -32,7 +15,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarFavorite" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottieFavorite"
@@ -42,7 +25,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbarFavorite"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.35000000"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"

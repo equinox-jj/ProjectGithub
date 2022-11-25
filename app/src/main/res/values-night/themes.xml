@@ -1,6 +1,5 @@
 <resources>
-    <!-- Base application theme. -->
-    <style name="Theme.ProjectGithub" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.ProjectGithub" parent="Theme.Material3.DayNight">
         <item name="colorPrimary">@color/md_theme_dark_primary</item>
         <item name="colorOnPrimary">@color/md_theme_dark_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_dark_primaryContainer</item>
@@ -27,5 +26,7 @@
         <item name="colorOnSurfaceInverse">@color/md_theme_dark_inverseOnSurface</item>
         <item name="colorSurfaceInverse">@color/md_theme_dark_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_dark_inversePrimary</item>
+        <item name="android:statusBarColor">@color/md_theme_light_onSurface</item>
     </style>
+
 </resources>

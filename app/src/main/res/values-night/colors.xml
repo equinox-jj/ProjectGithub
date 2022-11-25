@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="splash_background_color">#302B2B</color>
+    <color name="toolbar_color">#292222</color>
+
+    <color name="corner_stroke_color">#322B2B</color>
+
+    <color name="text_toolbar_color">#FFFFFFFF</color>
+    <color name="text_card_color">#FFFFFFFF</color>
+
+    <color name="icon_toolbar_color">#B6B4B4</color>
+    <color name="icon_favorite_color">#A62828</color>
+    <color name="icon_color">#B6B4B4</color>
+
     <color name="seed">#00282f</color>
     <color name="md_theme_light_primary">#006877</color>
     <color name="md_theme_light_onPrimary">#FFFFFF</color>

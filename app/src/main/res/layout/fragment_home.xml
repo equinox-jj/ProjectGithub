@@ -11,23 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbarHome"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                style="@style/TextAppearance.Material3.ActionBar.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_bold"
-                android:text="@string/home_screen" />
-
-        </androidx.appcompat.widget.Toolbar>
-
         <androidx.appcompat.widget.SearchView
             android:id="@+id/svUserList"
             android:layout_width="match_parent"
@@ -37,7 +20,7 @@
             app:iconifiedByDefault="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbarHome"
+            app:layout_constraintTop_toTopOf="parent"
             app:queryBackground="@null"
             app:queryHint="Search User..."
             app:searchIcon="@drawable/ic_round_search_24" />
@@ -57,7 +40,7 @@
 
         <ProgressBar
             android:id="@+id/pbHome"
-            style="?android:attr/progressBarStyle"
+            style="@style/ProgressBarM3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="invisible"
