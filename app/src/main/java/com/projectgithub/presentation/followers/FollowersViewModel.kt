@@ -7,11 +7,14 @@ import androidx.lifecycle.viewModelScope
 import com.projectgithub.common.Resources
 import com.projectgithub.data.model.ResultItem
 import com.projectgithub.data.repository.Repository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FollowersViewModel constructor(private val repository: Repository) : ViewModel() {
+@HiltViewModel
+class FollowersViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
 
     private val _state = MutableLiveData<Resources<List<ResultItem>>>()
     val state: LiveData<Resources<List<ResultItem>>> = _state

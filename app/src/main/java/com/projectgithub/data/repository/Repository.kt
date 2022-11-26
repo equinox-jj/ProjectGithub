@@ -11,29 +11,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import retrofit2.HttpException
-import java.io.IOException
+import javax.inject.Inject
 
-class Repository constructor(
+class Repository @Inject constructor(
     private val apiServices: ApiServices,
     private val userDao: UserDao,
     private val themeDataStore: ThemeDataStore
 ) {
-
-    companion object {
-        @Volatile
-        private var INSTANCE: Repository? = null
-
-        fun getInstance(
-            apiServices: ApiServices,
-            userDao: UserDao,
-            themeDataStore: ThemeDataStore
-        ): Repository {
-            return INSTANCE ?: synchronized(this) {
-                INSTANCE ?: Repository(apiServices, userDao, themeDataStore)
-            }
-        }
-    }
 
     fun searchUser(query: String): Flow<Resources<List<ResultItem>>> = flow {
         emit(Resources.Loading())
@@ -41,10 +25,6 @@ class Repository constructor(
             val result = apiServices.searchUser(query).items
             emit(Resources.Success(result))
         } catch (e: Exception) {
-            emit(Resources.Error(e.localizedMessage ?: ""))
-        } catch (e: HttpException) {
-            emit(Resources.Error(e.localizedMessage ?: ""))
-        } catch (e: IOException) {
             emit(Resources.Error(e.localizedMessage ?: ""))
         }
     }.flowOn(Dispatchers.IO)
@@ -56,10 +36,6 @@ class Repository constructor(
             emit(Resources.Success(result))
         } catch (e: Exception) {
             emit(Resources.Error(e.localizedMessage ?: ""))
-        } catch (e: HttpException) {
-            emit(Resources.Error(e.localizedMessage ?: ""))
-        } catch (e: IOException) {
-            emit(Resources.Error(e.localizedMessage ?: ""))
         }
     }.flowOn(Dispatchers.IO)
 
@@ -70,10 +46,6 @@ class Repository constructor(
             emit(Resources.Success(result))
         } catch (e: Exception) {
             emit(Resources.Error(e.localizedMessage ?: ""))
-        } catch (e: HttpException) {
-            emit(Resources.Error(e.localizedMessage ?: ""))
-        } catch (e: IOException) {
-            emit(Resources.Error(e.localizedMessage ?: ""))
         }
     }.flowOn(Dispatchers.IO)
 
@@ -83,10 +55,6 @@ class Repository constructor(
             val result = apiServices.getFollowing(username)
             emit(Resources.Success(result))
         } catch (e: Exception) {
-            emit(Resources.Error(e.localizedMessage ?: ""))
-        } catch (e: HttpException) {
-            emit(Resources.Error(e.localizedMessage ?: ""))
-        } catch (e: IOException) {
             emit(Resources.Error(e.localizedMessage ?: ""))
         }
     }.flowOn(Dispatchers.IO)

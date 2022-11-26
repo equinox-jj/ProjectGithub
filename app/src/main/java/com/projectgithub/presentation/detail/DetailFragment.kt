@@ -26,21 +26,18 @@ import com.projectgithub.data.model.DetailResponse
 import com.projectgithub.data.source.local.entity.UserEntity
 import com.projectgithub.databinding.FragmentDetailBinding
 import com.projectgithub.presentation.detail.adapter.ViewPagerAdapter
-import com.projectgithub.presentation.factory.ViewModelFactory
 import com.projectgithub.presentation.followers.FollowersFragment
 import com.projectgithub.presentation.following.FollowingFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
 
     private val args by navArgs<DetailFragmentArgs>()
-    private val detailViewModel by viewModels<DetailViewModel> {
-        ViewModelFactory.getInstance(
-            requireContext()
-        )
-    }
+    private val detailViewModel by viewModels<DetailViewModel>()
 
     private lateinit var userEntity: UserEntity
     private lateinit var savedMenuItem: MenuItem

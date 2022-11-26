@@ -5,11 +5,14 @@ import com.projectgithub.common.Resources
 import com.projectgithub.data.model.DetailResponse
 import com.projectgithub.data.repository.Repository
 import com.projectgithub.data.source.local.entity.UserEntity
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DetailViewModel constructor(private val repository: Repository, ) : ViewModel() {
+@HiltViewModel
+class DetailViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
 
     private val _state = MutableLiveData<Resources<DetailResponse>>()
     val state: LiveData<Resources<DetailResponse>> = _state

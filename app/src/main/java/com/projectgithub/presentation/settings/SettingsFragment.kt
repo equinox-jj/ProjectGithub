@@ -7,14 +7,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.projectgithub.R
 import com.projectgithub.databinding.FragmentSettingsBinding
-import com.projectgithub.presentation.factory.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
 
-    private val settingsViewModel by activityViewModels<SettingsViewModel> { ViewModelFactory.getInstance(requireContext()) }
+    private val settingsViewModel by activityViewModels<SettingsViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

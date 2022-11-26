@@ -21,18 +21,19 @@ import com.projectgithub.common.Resources
 import com.projectgithub.common.setVisibilityGone
 import com.projectgithub.common.setVisibilityVisible
 import com.projectgithub.databinding.FragmentHomeBinding
-import com.projectgithub.presentation.factory.ViewModelFactory
 import com.projectgithub.presentation.home.adapter.HomeAdapter
 import com.projectgithub.presentation.settings.SettingsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var homeAdapter: HomeAdapter
-    private val homeViewModel by viewModels<HomeViewModel> { ViewModelFactory.getInstance(requireContext()) }
-    private val settingsViewModel by activityViewModels<SettingsViewModel> { ViewModelFactory.getInstance(requireContext()) }
+    private val homeViewModel by viewModels<HomeViewModel>()
+    private val settingsViewModel by activityViewModels<SettingsViewModel>()
     private var currentQuery = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

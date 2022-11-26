@@ -7,12 +7,15 @@ import androidx.lifecycle.viewModelScope
 import com.projectgithub.common.Resources
 import com.projectgithub.data.model.ResultItem
 import com.projectgithub.data.repository.Repository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel constructor(private val repository: Repository) : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(private val repository: Repository) : ViewModel() {
 
     private val _state = MutableLiveData<Resources<List<ResultItem>>>()
     val state: LiveData<Resources<List<ResultItem>>> = _state

@@ -10,16 +10,17 @@ import com.projectgithub.common.Resources
 import com.projectgithub.common.setVisibilityGone
 import com.projectgithub.common.setVisibilityVisible
 import com.projectgithub.databinding.FragmentFollowingBinding
-import com.projectgithub.presentation.factory.ViewModelFactory
 import com.projectgithub.presentation.followers.adapter.FollowAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FollowingFragment : Fragment(R.layout.fragment_following) {
 
     private var _binding: FragmentFollowingBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var followingAdapter: FollowAdapter
-    private val followingViewModel by viewModels<FollowingViewModel> { ViewModelFactory.getInstance(requireContext()) }
+    private val followingViewModel by viewModels<FollowingViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -16,19 +16,16 @@ import com.projectgithub.common.entityToResult
 import com.projectgithub.common.setVisibilityGone
 import com.projectgithub.common.setVisibilityVisible
 import com.projectgithub.databinding.FragmentFavoriteBinding
-import com.projectgithub.presentation.factory.ViewModelFactory
 import com.projectgithub.presentation.favorite.adapter.FavoriteAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class FavoriteFragment : Fragment(R.layout.fragment_favorite) {
 
     private var _binding: FragmentFavoriteBinding? = null
     private val binding get() = _binding!!
 
-    private val favoriteViewModel by viewModels<FavoriteViewModel> {
-        ViewModelFactory.getInstance(
-            requireContext()
-        )
-    }
+    private val favoriteViewModel by viewModels<FavoriteViewModel>()
     private lateinit var favoriteAdapter: FavoriteAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
