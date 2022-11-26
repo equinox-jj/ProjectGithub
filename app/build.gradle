@@ -95,4 +95,7 @@ dependencies {
     // Swipe Refresh
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:$swipe_refresh_version")
 
+    // Leak Canary
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
+
 }

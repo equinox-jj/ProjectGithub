@@ -3,16 +3,16 @@ package com.projectgithub.presentation.favorite
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.projectgithub.data.repository.LocalRepository
+import com.projectgithub.data.repository.Repository
 import kotlinx.coroutines.launch
 
-class FavoriteViewModel constructor(private val localRepository: LocalRepository) : ViewModel() {
+class FavoriteViewModel constructor(private val repository: Repository) : ViewModel() {
 
-    val getUser = localRepository.getUser.asLiveData()
+    val getUser = repository.getUser.asLiveData()
 
     fun deleteAllUser() {
         viewModelScope.launch {
-            localRepository.deleteAllUser()
+            repository.deleteAllUser()
         }
     }
 

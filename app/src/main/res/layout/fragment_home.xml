@@ -1,122 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/refreshHome"
+    android:id="@+id/constraintHome"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.home.HomeFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/svUserList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@drawable/bg_searchview"
+        app:iconifiedByDefault="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:queryBackground="@null"
+        app:queryHint="Search User..."
+        app:searchIcon="@drawable/ic_round_search_24" />
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbarHome"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvUserList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="4dp"
+        android:visibility="invisible"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/svUserList"
+        tools:listitem="@layout/item_user_list" />
 
-            <TextView
-                style="@style/TextAppearance.Material3.ActionBar.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins_bold"
-                android:text="@string/home_screen" />
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/pbHome"
+        style="@style/Widget.Material3.LinearProgressIndicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/svUserList" />
 
-        </androidx.appcompat.widget.Toolbar>
+    <ImageView
+        android:id="@+id/ivSearchPerson"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:background="@drawable/home_person"
+        android:contentDescription="@null"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/svUserList"
+        app:layout_constraintVertical_bias="0.35000000" />
 
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/svUserList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:background="@drawable/bg_searchview"
-            app:iconifiedByDefault="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbarHome"
-            app:queryBackground="@null"
-            app:queryHint="Search User..."
-            app:searchIcon="@drawable/ic_round_search_24" />
+    <TextView
+        android:id="@+id/tvSearchText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_extrabold"
+        android:text="@string/search_user"
+        android:textSize="18sp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@+id/ivSearchPerson"
+        app:layout_constraintStart_toStartOf="@+id/ivSearchPerson"
+        app:layout_constraintTop_toBottomOf="@+id/ivSearchPerson" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvUserList"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="4dp"
-            android:visibility="invisible"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/svUserList"
-            tools:listitem="@layout/item_user_list" />
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottieHome"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/svUserList"
+        app:layout_constraintVertical_bias="0.35000000"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/error_robot" />
 
-        <ProgressBar
-            android:id="@+id/pbHome"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/svUserList" />
+    <TextView
+        android:id="@+id/tvErrorHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_extrabold"
+        android:text="@string/check_your_internet_connection"
+        android:textSize="18sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/lottieHome"
+        app:layout_constraintStart_toStartOf="@id/lottieHome"
+        app:layout_constraintTop_toBottomOf="@+id/lottieHome" />
 
-        <ImageView
-            android:id="@+id/ivSearchPerson"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:background="@drawable/home_person"
-            android:contentDescription="@null"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/svUserList"
-            app:layout_constraintVertical_bias="0.35000000" />
-
-        <TextView
-            android:id="@+id/tvSearchText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_extrabold"
-            android:text="@string/search_user"
-            android:textSize="18sp"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="@+id/ivSearchPerson"
-            app:layout_constraintStart_toStartOf="@+id/ivSearchPerson"
-            app:layout_constraintTop_toBottomOf="@+id/ivSearchPerson" />
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lottieHome"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/svUserList"
-            app:layout_constraintVertical_bias="0.35000000"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"
-            app:lottie_rawRes="@raw/error_robot" />
-
-        <TextView
-            android:id="@+id/tvErrorHome"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_extrabold"
-            android:text="@string/check_your_internet_connection"
-            android:textSize="18sp"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="@+id/lottieHome"
-            app:layout_constraintStart_toStartOf="@id/lottieHome"
-            app:layout_constraintTop_toBottomOf="@+id/lottieHome" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

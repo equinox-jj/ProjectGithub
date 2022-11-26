@@ -6,14 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.projectgithub.common.Resources
 import com.projectgithub.data.model.ResultItem
-import com.projectgithub.data.repository.RemoteRepository
-import kotlinx.coroutines.Dispatchers
+import com.projectgithub.data.repository.Repository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class HomeViewModel constructor(private val remoteRepository: RemoteRepository) : ViewModel() {
+class HomeViewModel constructor(private val repository: Repository) : ViewModel() {
 
     private val _state = MutableLiveData<Resources<List<ResultItem>>>()
     val state: LiveData<Resources<List<ResultItem>>> = _state
@@ -26,11 +25,10 @@ class HomeViewModel constructor(private val remoteRepository: RemoteRepository) 
     fun searchUser(query: String) {
         viewModelScope.launch {
             flowOf(query)
-                .debounce(700)
+                .debounce(800)
                 .filter { it.trim().isEmpty().not() }
                 .distinctUntilChanged()
-                .flatMapLatest { remoteRepository.searchUser(it) }
-                .flowOn(Dispatchers.Default)
+                .flatMapLatest { repository.searchUser(it) }
                 .collect {
                     if (it is Resources.Success) {
                         it.data

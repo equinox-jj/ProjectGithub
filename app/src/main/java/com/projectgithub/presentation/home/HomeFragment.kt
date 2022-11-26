@@ -1,6 +1,5 @@
 package com.projectgithub.presentation.home
 
-import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -11,29 +10,20 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.projectgithub.R
-import com.projectgithub.common.Constants
 import com.projectgithub.common.Resources
-import com.projectgithub.data.preferences.ThemeDataStore
-import com.projectgithub.data.repository.RemoteRepository
-import com.projectgithub.data.source.remote.network.ApiConfig
+import com.projectgithub.common.setVisibilityGone
+import com.projectgithub.common.setVisibilityVisible
 import com.projectgithub.databinding.FragmentHomeBinding
-import com.projectgithub.presentation.factory.RemoteVMFactory
+import com.projectgithub.presentation.factory.ViewModelFactory
 import com.projectgithub.presentation.home.adapter.HomeAdapter
-import com.projectgithub.presentation.theme.ThemeViewModel
-import com.projectgithub.presentation.theme.ThemeViewModelFactory
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(Constants.PREF_NAME)
+import com.projectgithub.presentation.settings.SettingsViewModel
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
@@ -41,8 +31,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val binding get() = _binding!!
 
     private lateinit var homeAdapter: HomeAdapter
-    private lateinit var homeViewModel: HomeViewModel
-    private lateinit var themeViewModel: ThemeViewModel
+    private val homeViewModel by viewModels<HomeViewModel> { ViewModelFactory.getInstance(requireContext()) }
+    private val settingsViewModel by activityViewModels<SettingsViewModel> { ViewModelFactory.getInstance(requireContext()) }
+    private var currentQuery = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,58 +41,28 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         initRecycler()
         initObserver()
-        initDarkMode()
         setupSearch()
         setupToolbar()
     }
 
     private fun setupToolbar() {
-        binding.toolbarHome.apply {
-            val menuHost: MenuHost = this@apply
-            menuHost.addMenuProvider(object : MenuProvider {
-                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                    menuInflater.inflate(R.menu.menu_home, menu)
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                            val isDarkMode = themeViewModel.getDarkModeKey.first()
-                            val menuItem = menu.findItem(R.id.dark_mode_menu)
-                            menuItem.isChecked = isDarkMode
-                            checkIsDarkMode(menuItem, isDarkMode)
-                        }
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_home, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.settings_menu -> {
+                        val action = HomeFragmentDirections.actionHomeFragmentToSettingsFragment()
+                        findNavController().navigate(action)
+                        true
                     }
+                    else -> false
                 }
-
-                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                    return when (menuItem.itemId) {
-                        R.id.dark_mode_menu -> {
-                            menuItem.isChecked = !menuItem.isChecked
-                            checkIsDarkMode(menuItem, menuItem.isChecked)
-                            true
-                        }
-                        else -> false
-                    }
-                }
-            }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-        }
-    }
-
-    private fun initDarkMode() {
-        val themeDataStore = ThemeDataStore.getInstance(requireContext().dataStore)
-        val themeFactory = ThemeViewModelFactory(themeDataStore)
-
-        themeViewModel = ViewModelProvider(this, themeFactory)[ThemeViewModel::class.java]
-    }
-
-    private fun checkIsDarkMode(menuItem: MenuItem, isDarkMode: Boolean) {
-        if (isDarkMode) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            themeViewModel.saveDarkModeKey(true)
-            menuItem.setIcon(R.drawable.ic_moon_24)
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            themeViewModel.saveDarkModeKey(false)
-            menuItem.setIcon(R.drawable.ic_sun_24)
-        }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun setupSearch() {
@@ -111,8 +72,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 override fun onQueryTextSubmit(query: String): Boolean {
                     query.let {
                         if (it.isNotEmpty()) {
-                            homeViewModel.searchUser(query)
-                            setupOnRefresh(query)
+                            currentQuery = it
+                            homeViewModel.searchUser(it)
                             svUserList.clearFocus()
                         }
                     }
@@ -122,8 +83,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 override fun onQueryTextChange(newText: String): Boolean {
                     newText.let {
                         if (it.isNotEmpty()) {
-                            homeViewModel.searchUser(newText)
-                            setupOnRefresh(newText)
+                            currentQuery = it
+                            homeViewModel.searchUser(it)
                         }
                     }
                     return true
@@ -137,68 +98,70 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun setupOnRefresh(query: String) {
-        binding.apply {
-            refreshHome.setOnRefreshListener {
-                homeViewModel.onRefresh(query)
-                refreshHome.isRefreshing = false
+    private fun initObserver() {
+        settingsViewModel.getDarkModeKey.observe(viewLifecycleOwner) { isDarkMode ->
+            if (isDarkMode) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+        homeViewModel.state.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is Resources.Loading -> {
+                    isLoadingState(true)
+                    isUserNotFound(false)
+                    isError(false)
+                }
+                is Resources.Success -> {
+                    isLoadingState(false)
+                    isError(false)
+                    if (response.data?.isNotEmpty() == true) {
+                        isUserNotFound(false)
+                        homeAdapter.setData(response.data)
+                    } else {
+                        isUserNotFound(true)
+                        Toast.makeText(context, response.message ?: getString(R.string.user_not_found), Toast.LENGTH_SHORT).show()
+                    }
+                }
+                is Resources.Error -> {
+                    isLoadingState(false)
+                    isUserNotFound(false)
+                    isError(true)
+                    showErrorSnackBar()
+                }
             }
         }
     }
 
-    private fun initObserver() {
-        val remoteRepository = RemoteRepository(ApiConfig.apiServices)
-        val factory = RemoteVMFactory(remoteRepository)
-        homeViewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
-        homeViewModel.state.observe(viewLifecycleOwner) { response ->
-            when (response) {
-                is Resources.Loading -> {
-                    binding.pbHome.visibility = View.VISIBLE
-                    binding.rvUserList.visibility = View.INVISIBLE
-                    binding.ivSearchPerson.visibility = View.INVISIBLE
-                    binding.tvSearchText.visibility = View.INVISIBLE
-                    binding.lottieHome.visibility = View.INVISIBLE
-                    binding.tvErrorHome.visibility = View.INVISIBLE
-                }
-                is Resources.Success -> {
-                    response.data?.let {
-                        if (it.isNotEmpty()) {
-                            binding.pbHome.visibility = View.INVISIBLE
-                            binding.rvUserList.visibility = View.VISIBLE
-                            binding.ivSearchPerson.visibility = View.INVISIBLE
-                            binding.tvSearchText.visibility = View.INVISIBLE
-                            binding.lottieHome.visibility = View.INVISIBLE
-                            binding.tvErrorHome.visibility = View.INVISIBLE
-                            homeAdapter.setData(it)
-                        } else {
-                            binding.pbHome.visibility = View.INVISIBLE
-                            binding.rvUserList.visibility = View.INVISIBLE
-                            binding.ivSearchPerson.visibility = View.VISIBLE
-                            binding.tvSearchText.visibility = View.VISIBLE
-                            binding.lottieHome.visibility = View.INVISIBLE
-                            binding.tvErrorHome.visibility = View.INVISIBLE
-                            Toast.makeText(
-                                context,
-                                response.message ?: "User Not Found.",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
-                }
-                is Resources.Error -> {
-                    binding.pbHome.visibility = View.INVISIBLE
-                    binding.rvUserList.visibility = View.INVISIBLE
-                    binding.ivSearchPerson.visibility = View.INVISIBLE
-                    binding.tvSearchText.visibility = View.INVISIBLE
-                    binding.lottieHome.visibility = View.VISIBLE
-                    binding.tvErrorHome.visibility = View.VISIBLE
-                    Toast.makeText(
-                        context,
-                        response.message ?: "Check Your Internet Connection.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
+    private fun isLoadingState(isLoading: Boolean) {
+        if (isLoading) {
+            binding.pbHome.setVisibilityVisible()
+            binding.rvUserList.setVisibilityGone()
+            binding.ivSearchPerson.setVisibilityGone()
+            binding.tvSearchText.setVisibilityGone()
+        } else {
+            binding.pbHome.setVisibilityGone()
+            binding.rvUserList.setVisibilityVisible()
+        }
+    }
+
+    private fun isUserNotFound(isNotFound: Boolean) {
+        if (isNotFound) {
+            binding.rvUserList.setVisibilityGone()
+            binding.ivSearchPerson.setVisibilityVisible()
+            binding.tvSearchText.setVisibilityVisible()
+        } else {
+            binding.ivSearchPerson.setVisibilityGone()
+            binding.tvSearchText.setVisibilityGone()
+        }
+    }
+
+    private fun isError(isError: Boolean) {
+        if (isError) {
+            binding.rvUserList.setVisibilityGone()
+            binding.lottieHome.setVisibilityVisible()
+            binding.tvErrorHome.setVisibilityVisible()
+        } else {
+            binding.lottieHome.setVisibilityGone()
+            binding.tvErrorHome.setVisibilityGone()
         }
     }
 
@@ -208,6 +171,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             rvUserList.adapter = homeAdapter
             rvUserList.setHasFixedSize(true)
         }
+    }
+
+    private fun showErrorSnackBar() {
+        Snackbar.make(binding.constraintHome, getString(R.string.error_when_load_the_data), Snackbar.LENGTH_INDEFINITE)
+            .setAction(getString(R.string.retry)) {
+                homeViewModel.onRefresh(currentQuery)
+            }
+            .show()
     }
 
     override fun onDestroyView() {

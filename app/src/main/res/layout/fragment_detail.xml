@@ -14,13 +14,11 @@
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/ctlDet"
-            style="@style/TextAppearance.Material3.ActionBar.Title"
             android:layout_width="match_parent"
             android:layout_height="350dp"
-            app:expandedTitleTextColor="@color/grey_light"
+            app:expandedTitleTextColor="@color/text_toolbar_color"
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
-            app:titleCollapseMode="fade"
-            app:titleTextEllipsize="end">
+            app:titleCollapseMode="fade">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/ivAvatarDet"
@@ -68,7 +66,7 @@
                     android:fontFamily="@font/poppins_bold"
                     android:gravity="center_horizontal"
                     android:maxLines="1"
-                    android:textColor="@color/grey_light"
+                    android:textColor="@color/text_toolbar_color"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -87,7 +85,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:gravity="center_horizontal"
                     android:maxLines="1"
-                    android:textColor="@color/grey_light"
+                    android:textColor="@color/text_toolbar_color"
                     android:textSize="14sp"
                     app:drawableStartCompat="@drawable/ic_round_work_24"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -107,7 +105,7 @@
                     android:fontFamily="@font/poppins_medium"
                     android:gravity="center_horizontal"
                     android:maxLines="1"
-                    android:textColor="@color/grey_light"
+                    android:textColor="@color/text_toolbar_color"
                     android:textSize="14sp"
                     app:drawableStartCompat="@drawable/ic_round_location_on_24"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -121,7 +119,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_bold"
                     android:text="@string/repository"
-                    android:textColor="@color/grey_light"
+                    android:textColor="@color/text_toolbar_color"
                     android:textSize="14sp"
                     app:layout_constraintEnd_toStartOf="@+id/textFollowers"
                     app:layout_constraintStart_toStartOf="parent"
@@ -134,7 +132,7 @@
                     android:layout_marginTop="8dp"
                     android:fontFamily="@font/poppins_bold"
                     android:text="@string/followers"
-                    android:textColor="@color/grey_light"
+                    android:textColor="@color/text_toolbar_color"
                     android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="@+id/tvLocationDet"
                     app:layout_constraintStart_toStartOf="@+id/tvLocationDet"
@@ -146,7 +144,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_bold"
                     android:text="@string/following"
-                    android:textColor="@color/grey_light"
+                    android:textColor="@color/text_toolbar_color"
                     android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/textFollowers"
@@ -158,7 +156,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
                     android:fontFamily="@font/poppins_medium"
-                    android:textColor="@color/grey_light"
+                    android:textColor="@color/text_toolbar_color"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="@+id/textRepository"
                     app:layout_constraintStart_toStartOf="@+id/textRepository"
@@ -170,7 +168,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_medium"
-                    android:textColor="@color/grey_light"
+                    android:textColor="@color/text_toolbar_color"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="@+id/textFollowers"
                     app:layout_constraintStart_toStartOf="@+id/textFollowers"
@@ -182,7 +180,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_medium"
-                    android:textColor="@color/grey_light"
+                    android:textColor="@color/text_toolbar_color"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="@+id/textFollowing"
                     app:layout_constraintStart_toStartOf="@+id/textFollowing"
@@ -190,13 +188,6 @@
                     tools:text="Lorem Ipsum" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbarDet"
-                android:layout_width="match_parent"
-                android:layout_height="?actionBarSize"
-                app:collapseIcon="@drawable/ic_launcher_foreground"
-                app:layout_collapseMode="pin" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -223,12 +214,5 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <ProgressBar
-        android:id="@+id/pbDet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

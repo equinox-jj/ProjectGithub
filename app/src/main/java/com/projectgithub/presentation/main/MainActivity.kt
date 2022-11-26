@@ -5,7 +5,10 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.projectgithub.R
 import com.projectgithub.databinding.ActivityMainBinding
@@ -31,11 +34,25 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.detailFragment -> isBottomNavVisible(false)
+                R.id.settingsFragment -> isBottomNavVisible(false)
                 else -> isBottomNavVisible(true)
             }
         }
 
+        val appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.homeFragment,
+                R.id.favoriteFragment
+            )
+        )
+
         binding.bottomNav.setupWithNavController(navController)
+        setupActionBarWithNavController(navController, appBarConfiguration)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        navController = this.findNavController(R.id.mainNavHost)
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
     private fun isBottomNavVisible(show: Boolean) {

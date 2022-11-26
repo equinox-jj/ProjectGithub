@@ -3,13 +3,14 @@ package com.projectgithub.presentation.following
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.projectgithub.R
+import com.projectgithub.common.Constants.NAME_ARGS
 import com.projectgithub.common.Resources
-import com.projectgithub.data.repository.RemoteRepository
-import com.projectgithub.data.source.remote.network.ApiConfig
+import com.projectgithub.common.setVisibilityGone
+import com.projectgithub.common.setVisibilityVisible
 import com.projectgithub.databinding.FragmentFollowingBinding
-import com.projectgithub.presentation.factory.RemoteVMFactory
+import com.projectgithub.presentation.factory.ViewModelFactory
 import com.projectgithub.presentation.followers.adapter.FollowAdapter
 
 class FollowingFragment : Fragment(R.layout.fragment_following) {
@@ -18,7 +19,7 @@ class FollowingFragment : Fragment(R.layout.fragment_following) {
     private val binding get() = _binding!!
 
     private lateinit var followingAdapter: FollowAdapter
-    private lateinit var followingViewModel: FollowingViewModel
+    private val followingViewModel by viewModels<FollowingViewModel> { ViewModelFactory.getInstance(requireContext()) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -29,34 +30,46 @@ class FollowingFragment : Fragment(R.layout.fragment_following) {
     }
 
     private fun initObserver() {
-        val username = arguments?.getString("username").toString()
-        val remoteRepository = RemoteRepository(ApiConfig.apiServices)
-        val factory = RemoteVMFactory(remoteRepository)
-        setupOnRefresh(username)
-        followingViewModel = ViewModelProvider(this, factory)[FollowingViewModel::class.java]
+        val username = arguments?.getString(NAME_ARGS).toString()
+
         followingViewModel.getFollowing(username)
         followingViewModel.state.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resources.Loading -> {
-                    binding.pbFollowing.visibility = View.VISIBLE
-                    binding.rvFollowing.visibility = View.INVISIBLE
-                    binding.tvErrorRetry.visibility = View.INVISIBLE
-                    binding.btnErrorRetry.visibility = View.INVISIBLE
+                    isLoading(true)
+                    isError(false)
                 }
                 is Resources.Success -> {
-                    binding.pbFollowing.visibility = View.INVISIBLE
-                    binding.rvFollowing.visibility = View.VISIBLE
-                    binding.tvErrorRetry.visibility = View.INVISIBLE
-                    binding.btnErrorRetry.visibility = View.INVISIBLE
+                    isLoading(false)
+                    isError(false)
                     response.data?.let { followingAdapter.setData(it) }
                 }
                 is Resources.Error -> {
-                    binding.pbFollowing.visibility = View.INVISIBLE
-                    binding.rvFollowing.visibility = View.INVISIBLE
-                    binding.tvErrorRetry.visibility = View.VISIBLE
-                    binding.btnErrorRetry.visibility = View.VISIBLE
+                    isLoading(false)
+                    isError(true)
+                    setupOnRefresh(username)
                 }
             }
+        }
+    }
+
+    private fun isLoading(isLoading: Boolean) {
+        if (isLoading) {
+            binding.pbFollowing.setVisibilityVisible()
+            binding.rvFollowing.setVisibilityGone()
+        } else {
+            binding.pbFollowing.setVisibilityGone()
+            binding.rvFollowing.setVisibilityVisible()
+        }
+    }
+
+    private fun isError(isError: Boolean) {
+        if (isError) {
+            binding.tvErrorRetry.setVisibilityVisible()
+            binding.btnErrorRetry.setVisibilityVisible()
+        } else {
+            binding.tvErrorRetry.setVisibilityGone()
+            binding.btnErrorRetry.setVisibilityGone()
         }
     }
 

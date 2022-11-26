@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ProjectGithub</string>
 
-    <!-- Detail Screen -->
+    <!-- Text -->
     <string name="following">Following</string>
     <string name="followers">Followers</string>
     <string name="repository">Repository</string>
@@ -16,4 +16,8 @@
     <string name="settings">Settings</string>
     <string name="no_favorites_user">No favorites user</string>
     <string name="delete_all">Delete all</string>
+    <string name="user_not_found">User Not Found.</string>
+    <string name="no_data">No Data.</string>
+    <string name="okay">Okay</string>
+    <string name="all_user_removed">All User Removed.</string>
 </resources>

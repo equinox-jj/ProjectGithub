@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/dark_mode_menu"
-        android:icon="@drawable/ic_sun_24"
+        android:id="@+id/settings_menu"
+        android:icon="@drawable/ic_round_settings_24"
         android:title="@string/dark_mode"
         app:showAsAction="ifRoom" />
 </menu>

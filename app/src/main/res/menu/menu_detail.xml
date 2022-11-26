@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
     <item
         android:id="@+id/fav_menu"
         android:icon="@drawable/ic_round_favorite_24"
+        android:iconTint="@color/icon_color"
+        android:title="@string/favorite"
         app:showAsAction="ifRoom"
-        android:title="@string/favorite" />
+        tools:targetApi="o" />
     <item
         android:id="@+id/share_menu"
         android:icon="@drawable/ic_round_share_24"
-        app:showAsAction="ifRoom"
-        android:title="@string/share" />
+        android:title="@string/share"
+        app:showAsAction="ifRoom" />
+
 </menu>
