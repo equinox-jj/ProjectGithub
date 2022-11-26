@@ -19,7 +19,7 @@ class FollowingFragment : Fragment(R.layout.fragment_following) {
     private val binding get() = _binding!!
 
     private lateinit var followingAdapter: FollowAdapter
-    private val followingViewModel by viewModels<FollowingViewModel> { ViewModelFactory.getInstance(requireContext()) }
+    private val followingViewModel by viewModels<FollowingViewModel> { ViewModelFactory.getInstance() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -31,7 +31,7 @@ class FollowingFragment : Fragment(R.layout.fragment_following) {
 
     private fun initObserver() {
         val username = arguments?.getString(NAME_ARGS).toString()
-        setupOnRefresh(username)
+
         followingViewModel.getFollowing(username)
         followingViewModel.state.observe(viewLifecycleOwner) { response ->
             when (response) {
@@ -47,6 +47,7 @@ class FollowingFragment : Fragment(R.layout.fragment_following) {
                 is Resources.Error -> {
                     isLoading(false)
                     isError(true)
+                    setupOnRefresh(username)
                 }
             }
         }

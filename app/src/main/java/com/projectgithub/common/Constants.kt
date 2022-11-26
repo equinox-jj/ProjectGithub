@@ -12,9 +12,4 @@ object Constants {
 
     const val NAME_ARGS = "username"
 
-    const val PREF_NAME = "theme_preferences"
-    const val NIGHT_MODE_KEY = "night_mode_key"
-
-    const val DB_NAME = "user_db"
-    const val TABLE_NAME = "user_table"
 }

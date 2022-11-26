@@ -1,20 +1,11 @@
 package com.projectgithub.presentation.home
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.projectgithub.R
 import com.projectgithub.common.Resources
@@ -23,7 +14,6 @@ import com.projectgithub.common.setVisibilityVisible
 import com.projectgithub.databinding.FragmentHomeBinding
 import com.projectgithub.presentation.factory.ViewModelFactory
 import com.projectgithub.presentation.home.adapter.HomeAdapter
-import com.projectgithub.presentation.settings.SettingsViewModel
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
@@ -31,8 +21,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val binding get() = _binding!!
 
     private lateinit var homeAdapter: HomeAdapter
-    private val homeViewModel by viewModels<HomeViewModel> { ViewModelFactory.getInstance(requireContext()) }
-    private val settingsViewModel by activityViewModels<SettingsViewModel> { ViewModelFactory.getInstance(requireContext()) }
+    private val homeViewModel by viewModels<HomeViewModel> { ViewModelFactory.getInstance() }
     private var currentQuery = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,27 +31,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         initRecycler()
         initObserver()
         setupSearch()
-        setupToolbar()
-    }
-
-    private fun setupToolbar() {
-        val menuHost: MenuHost = requireActivity()
-        menuHost.addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.menu_home, menu)
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return when (menuItem.itemId) {
-                    R.id.settings_menu -> {
-                        val action = HomeFragmentDirections.actionHomeFragmentToSettingsFragment()
-                        findNavController().navigate(action)
-                        true
-                    }
-                    else -> false
-                }
-            }
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun setupSearch() {
@@ -99,10 +67,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun initObserver() {
-        settingsViewModel.getDarkModeKey.observe(viewLifecycleOwner) { isDarkMode ->
-            if (isDarkMode) AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            else AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        }
         homeViewModel.state.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Resources.Loading -> {
@@ -118,7 +82,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         homeAdapter.setData(response.data)
                     } else {
                         isUserNotFound(true)
-                        Toast.makeText(context, response.message ?: getString(R.string.user_not_found), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            response.message ?: getString(R.string.user_not_found),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
                 is Resources.Error -> {
@@ -174,7 +142,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun showErrorSnackBar() {
-        Snackbar.make(binding.constraintHome, getString(R.string.error_when_load_the_data), Snackbar.LENGTH_INDEFINITE)
+        Snackbar.make(
+            binding.constraintHome,
+            getString(R.string.error_when_load_the_data),
+            Snackbar.LENGTH_INDEFINITE
+        )
             .setAction(getString(R.string.retry)) {
                 homeViewModel.onRefresh(currentQuery)
             }
