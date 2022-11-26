@@ -30,7 +30,7 @@
         <item name="android:statusBarColor">@color/md_theme_light_onSurface</item>
 
         <!-- Widget Material 3 -->
-        <item name="cardViewStyle">@style/CardViewM3</item>
+        <item name="materialCardViewStyle">@style/CardViewM3</item>
         <item name="collapsingToolbarLayoutStyle">@style/CollapsingToolbarM3</item>
         <item name="toolbarStyle">@style/ToolbarM3</item>
     </style>
