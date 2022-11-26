@@ -31,7 +31,7 @@ class FollowingFragment : Fragment(R.layout.fragment_following) {
 
     private fun initObserver() {
         val username = arguments?.getString(NAME_ARGS).toString()
-        setupOnRefresh(username)
+
         followingViewModel.getFollowing(username)
         followingViewModel.state.observe(viewLifecycleOwner) { response ->
             when (response) {
@@ -47,6 +47,7 @@ class FollowingFragment : Fragment(R.layout.fragment_following) {
                 is Resources.Error -> {
                     isLoading(false)
                     isError(true)
+                    setupOnRefresh(username)
                 }
             }
         }

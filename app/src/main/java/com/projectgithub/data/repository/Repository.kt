@@ -11,8 +11,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import retrofit2.HttpException
-import java.io.IOException
 
 class Repository constructor(
     private val apiServices: ApiServices,
@@ -42,10 +40,6 @@ class Repository constructor(
             emit(Resources.Success(result))
         } catch (e: Exception) {
             emit(Resources.Error(e.localizedMessage ?: ""))
-        } catch (e: HttpException) {
-            emit(Resources.Error(e.localizedMessage ?: ""))
-        } catch (e: IOException) {
-            emit(Resources.Error(e.localizedMessage ?: ""))
         }
     }.flowOn(Dispatchers.IO)
 
@@ -55,10 +49,6 @@ class Repository constructor(
             val result = apiServices.getUserByName(username)
             emit(Resources.Success(result))
         } catch (e: Exception) {
-            emit(Resources.Error(e.localizedMessage ?: ""))
-        } catch (e: HttpException) {
-            emit(Resources.Error(e.localizedMessage ?: ""))
-        } catch (e: IOException) {
             emit(Resources.Error(e.localizedMessage ?: ""))
         }
     }.flowOn(Dispatchers.IO)
@@ -70,10 +60,6 @@ class Repository constructor(
             emit(Resources.Success(result))
         } catch (e: Exception) {
             emit(Resources.Error(e.localizedMessage ?: ""))
-        } catch (e: HttpException) {
-            emit(Resources.Error(e.localizedMessage ?: ""))
-        } catch (e: IOException) {
-            emit(Resources.Error(e.localizedMessage ?: ""))
         }
     }.flowOn(Dispatchers.IO)
 
@@ -83,10 +69,6 @@ class Repository constructor(
             val result = apiServices.getFollowing(username)
             emit(Resources.Success(result))
         } catch (e: Exception) {
-            emit(Resources.Error(e.localizedMessage ?: ""))
-        } catch (e: HttpException) {
-            emit(Resources.Error(e.localizedMessage ?: ""))
-        } catch (e: IOException) {
             emit(Resources.Error(e.localizedMessage ?: ""))
         }
     }.flowOn(Dispatchers.IO)
