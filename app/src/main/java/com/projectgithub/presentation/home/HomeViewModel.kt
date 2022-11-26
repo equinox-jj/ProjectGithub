@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.projectgithub.common.Resources
 import com.projectgithub.data.model.ResultItem
 import com.projectgithub.data.repository.Repository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
@@ -30,7 +29,6 @@ class HomeViewModel constructor(private val repository: Repository) : ViewModel(
                 .filter { it.trim().isEmpty().not() }
                 .distinctUntilChanged()
                 .flatMapLatest { repository.searchUser(it) }
-                .flowOn(Dispatchers.Default)
                 .collect {
                     if (it is Resources.Success) {
                         it.data

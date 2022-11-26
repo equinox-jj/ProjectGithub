@@ -7,8 +7,10 @@ import com.projectgithub.data.preferences.ThemeDataStore
 import com.projectgithub.data.source.local.dao.UserDao
 import com.projectgithub.data.source.local.entity.UserEntity
 import com.projectgithub.data.source.remote.network.ApiServices
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -45,7 +47,7 @@ class Repository constructor(
         } catch (e: IOException) {
             emit(Resources.Error(e.localizedMessage ?: ""))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     fun getUserByName(username: String): Flow<Resources<DetailResponse>> = flow {
         emit(Resources.Loading())
@@ -59,7 +61,7 @@ class Repository constructor(
         } catch (e: IOException) {
             emit(Resources.Error(e.localizedMessage ?: ""))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     fun getFollowers(username: String): Flow<Resources<List<ResultItem>>> = flow {
         emit(Resources.Loading())
@@ -73,7 +75,7 @@ class Repository constructor(
         } catch (e: IOException) {
             emit(Resources.Error(e.localizedMessage ?: ""))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     fun getFollowing(username: String): Flow<Resources<List<ResultItem>>> = flow {
         emit(Resources.Loading())
@@ -87,7 +89,7 @@ class Repository constructor(
         } catch (e: IOException) {
             emit(Resources.Error(e.localizedMessage ?: ""))
         }
-    }
+    }.flowOn(Dispatchers.IO)
 
     val getUser: Flow<List<UserEntity>> = userDao.getUser()
     suspend fun insertUser(entity: UserEntity) = userDao.insertUser(entity)

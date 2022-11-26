@@ -66,20 +66,27 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                if (menuItem.itemId == R.id.fav_menu && !isUserSaved) {
-                    insertUser(menuItem)
-                } else if (menuItem.itemId == R.id.fav_menu && isUserSaved) {
-                    deleteUser(menuItem)
-                } else if (menuItem.itemId == R.id.share_menu) {
-                    val sendIntent: Intent = Intent().apply {
-                        action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_TEXT, userEntity.url)
-                        type = "text/plain"
+                return when (menuItem.itemId) {
+                    R.id.fav_menu -> {
+                        if (!isUserSaved) {
+                            insertUser(menuItem)
+                        } else {
+                            deleteUser(menuItem)
+                        }
+                        true
                     }
-                    val shareIntent = Intent.createChooser(sendIntent, null)
-                    startActivity(shareIntent)
+                    R.id.share_menu -> {
+                        val sendIntent: Intent = Intent().apply {
+                            action = Intent.ACTION_SEND
+                            putExtra(Intent.EXTRA_TEXT, userEntity.url)
+                            type = "text/plain"
+                        }
+                        val shareIntent = Intent.createChooser(sendIntent, null)
+                        startActivity(shareIntent)
+                        true
+                    }
+                    else -> false
                 }
-                return true
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
@@ -139,8 +146,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             else tvCompanyDet.text = getString(R.string.no_data)
             if (data?.location != null) tvLocationDet.text = data.location
             else tvLocationDet.text = getString(R.string.no_data)
-            ctlDet.title = data?.name
-            tvUsernameDet.text = data?.login
+            tvUsernameDet.text = data?.name
             tvRepository.text = data?.publicRepos.toString()
             tvFollowers.text = data?.followers.toString()
             tvFollowing.text = data?.following.toString()

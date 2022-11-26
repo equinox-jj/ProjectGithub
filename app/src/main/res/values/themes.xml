@@ -62,8 +62,8 @@
 
     </style>
 
-    <style name="ProgressBarM3" parent="Widget.Material3.CircularProgressIndicator.Medium">
-
+    <style name="ProgressBarM3" parent="Widget.Material3.CircularProgressIndicator">
+        <item name="android:tint">@color/corner_stroke_color</item>
     </style>
 
 </resources>

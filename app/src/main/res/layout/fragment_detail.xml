@@ -17,11 +17,9 @@
             style="@style/CollapsingToolbarM3"
             android:layout_width="match_parent"
             android:layout_height="350dp"
-            app:expandedTitleGravity="top"
             app:expandedTitleTextColor="@color/text_toolbar_color"
             app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"
-            app:titleCollapseMode="fade"
-            app:titleTextEllipsize="end">
+            app:titleCollapseMode="fade">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/ivAvatarDet"

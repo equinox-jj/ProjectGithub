@@ -15,6 +15,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.projectgithub.R
 import com.projectgithub.common.Resources
 import com.projectgithub.common.setVisibilityGone
@@ -78,8 +79,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 override fun onQueryTextSubmit(query: String): Boolean {
                     query.let {
                         if (it.isNotEmpty()) {
-                            homeViewModel.searchUser(query)
-                            setupOnRefresh(query)
+                            homeViewModel.searchUser(it)
+                            showErrorSnackBar(it)
                             svUserList.clearFocus()
                         }
                     }
@@ -89,8 +90,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 override fun onQueryTextChange(newText: String): Boolean {
                     newText.let {
                         if (it.isNotEmpty()) {
-                            homeViewModel.searchUser(newText)
-                            setupOnRefresh(newText)
+                            homeViewModel.searchUser(it)
+                            showErrorSnackBar(it)
                         }
                     }
                     return true
@@ -100,15 +101,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 svUserList.setQuery("", false)
                 svUserList.clearFocus()
                 true
-            }
-        }
-    }
-
-    private fun setupOnRefresh(query: String) {
-        binding.apply {
-            refreshHome.setOnRefreshListener {
-                homeViewModel.onRefresh(query)
-                refreshHome.isRefreshing = false
             }
         }
     }
@@ -193,6 +185,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             rvUserList.adapter = homeAdapter
             rvUserList.setHasFixedSize(true)
         }
+    }
+
+    private fun showErrorSnackBar(query: String) {
+        Snackbar.make(
+            requireView(),
+            getString(R.string.error_when_load_the_data),
+            Snackbar.LENGTH_INDEFINITE
+        ).setAction(getString(R.string.retry)) {
+            homeViewModel.onRefresh(query)
+        }.setAnchorView(binding.constraintHome).show()
     }
 
     override fun onDestroyView() {
