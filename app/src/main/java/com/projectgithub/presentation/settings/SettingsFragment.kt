@@ -27,9 +27,11 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         settingsViewModel.getDarkModeKey.observe(viewLifecycleOwner) { isDarkMode ->
             if (isDarkMode) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                binding.ivSettings.setImageResource(R.drawable.crescent_moon)
                 binding.switchSetting.isChecked = true
             } else {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                binding.ivSettings.setImageResource(R.drawable.sun)
                 binding.switchSetting.isChecked = false
             }
         }

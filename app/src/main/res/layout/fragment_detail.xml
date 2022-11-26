@@ -14,7 +14,6 @@
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/ctlDet"
-            style="@style/CollapsingToolbarM3"
             android:layout_width="match_parent"
             android:layout_height="350dp"
             app:expandedTitleTextColor="@color/text_toolbar_color"
@@ -215,12 +214,5 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <ProgressBar
-        android:id="@+id/pbDet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

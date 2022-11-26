@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardViewUserFav"
-    style="@style/CardViewM3"
     android:layout_width="match_parent"
     android:layout_height="130dp"
     android:layout_margin="8dp">

@@ -31,16 +31,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val binding get() = _binding!!
 
     private lateinit var homeAdapter: HomeAdapter
-    private val homeViewModel by viewModels<HomeViewModel> {
-        ViewModelFactory.getInstance(
-            requireContext()
-        )
-    }
-    private val settingsViewModel by activityViewModels<SettingsViewModel> {
-        ViewModelFactory.getInstance(
-            requireContext()
-        )
-    }
+    private val homeViewModel by viewModels<HomeViewModel> { ViewModelFactory.getInstance(requireContext()) }
+    private val settingsViewModel by activityViewModels<SettingsViewModel> { ViewModelFactory.getInstance(requireContext()) }
+    private var currentQuery = ""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -79,8 +72,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 override fun onQueryTextSubmit(query: String): Boolean {
                     query.let {
                         if (it.isNotEmpty()) {
+                            currentQuery = it
                             homeViewModel.searchUser(it)
-                            showErrorSnackBar(it)
                             svUserList.clearFocus()
                         }
                     }
@@ -90,8 +83,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 override fun onQueryTextChange(newText: String): Boolean {
                     newText.let {
                         if (it.isNotEmpty()) {
+                            currentQuery = it
                             homeViewModel.searchUser(it)
-                            showErrorSnackBar(it)
                         }
                     }
                     return true
@@ -125,22 +118,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         homeAdapter.setData(response.data)
                     } else {
                         isUserNotFound(true)
-                        Toast.makeText(
-                            context,
-                            response.message ?: getString(R.string.user_not_found),
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        Toast.makeText(context, response.message ?: getString(R.string.user_not_found), Toast.LENGTH_SHORT).show()
                     }
                 }
                 is Resources.Error -> {
                     isLoadingState(false)
                     isUserNotFound(false)
                     isError(true)
-                    Toast.makeText(
-                        context,
-                        response.message ?: getString(R.string.check_your_internet_connection),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showErrorSnackBar()
                 }
             }
         }
@@ -171,6 +156,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun isError(isError: Boolean) {
         if (isError) {
+            binding.rvUserList.setVisibilityGone()
             binding.lottieHome.setVisibilityVisible()
             binding.tvErrorHome.setVisibilityVisible()
         } else {
@@ -187,14 +173,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun showErrorSnackBar(query: String) {
-        Snackbar.make(
-            requireView(),
-            getString(R.string.error_when_load_the_data),
-            Snackbar.LENGTH_INDEFINITE
-        ).setAction(getString(R.string.retry)) {
-            homeViewModel.onRefresh(query)
-        }.setAnchorView(binding.constraintHome).show()
+    private fun showErrorSnackBar() {
+        Snackbar.make(binding.constraintHome, getString(R.string.error_when_load_the_data), Snackbar.LENGTH_INDEFINITE)
+            .setAction(getString(R.string.retry)) {
+                homeViewModel.onRefresh(currentQuery)
+            }
+            .show()
     }
 
     override fun onDestroyView() {

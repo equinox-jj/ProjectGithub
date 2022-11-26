@@ -28,17 +28,19 @@
         <item name="colorSurfaceInverse">@color/md_theme_light_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
         <item name="android:statusBarColor">@color/md_theme_light_onSurface</item>
+
+        <!-- Widget Material 3 -->
+        <item name="cardViewStyle">@style/CardViewM3</item>
+        <item name="collapsingToolbarLayoutStyle">@style/CollapsingToolbarM3</item>
+        <item name="toolbarStyle">@style/ToolbarM3</item>
+        <item name="switchStyle">@style/SwitchM3</item>
+        <item name="progressBarStyle">@style/ProgressBarM3</item>
     </style>
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/splash_background_color</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
         <item name="postSplashScreenTheme">@style/Theme.ProjectGithub</item>
-    </style>
-
-    <style name="ShapeImageRoundedBottom" parent="">
-        <item name="cornerSizeBottomRight">25dp</item>
-        <item name="cornerSizeBottomLeft">25dp</item>
     </style>
 
     <style name="CardViewM3" parent="Widget.Material3.CardView.Filled">
@@ -51,10 +53,6 @@
     </style>
 
     <style name="ToolbarM3" parent="Widget.Material3.Toolbar">
-        <item name="android:background">@color/toolbar_color</item>
-    </style>
-
-    <style name="SearchViewM3" parent="Widget.Material3.Snackbar">
 
     </style>
 
@@ -62,8 +60,13 @@
 
     </style>
 
-    <style name="ProgressBarM3" parent="Widget.Material3.CircularProgressIndicator">
-        <item name="android:tint">@color/corner_stroke_color</item>
+    <style name="ProgressBarM3" parent="Widget.Material3.CircularProgressIndicator.Medium">
+
+    </style>
+
+    <style name="ShapeImageRoundedBottom" parent="">
+        <item name="cornerSizeBottomRight">25dp</item>
+        <item name="cornerSizeBottomLeft">25dp</item>
     </style>
 
 </resources>

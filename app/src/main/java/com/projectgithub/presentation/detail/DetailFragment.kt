@@ -164,10 +164,8 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     private fun isLoading(isLoading: Boolean) {
         if (isLoading) {
-            binding.pbDet.setVisibilityVisible()
             binding.constraintDet.setVisibilityGone()
         } else {
-            binding.pbDet.setVisibilityGone()
             binding.constraintDet.setVisibilityVisible()
         }
     }
@@ -207,22 +205,16 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     }
 
     private fun showSnackBarFavorite(message: String) {
-        Snackbar.make(
-            binding.constraintDet,
-            message,
-            Snackbar.LENGTH_SHORT
-        ).setAction(getString(R.string.okay)) {}
+        Snackbar.make(binding.constraintDet, message, Snackbar.LENGTH_SHORT).setAction(getString(R.string.okay)) {}
             .show()
     }
 
     private fun showErrorSnackBar(username: String) {
-        Snackbar.make(
-            requireView(),
-            getString(R.string.error_when_load_the_data),
-            Snackbar.LENGTH_INDEFINITE
-        ).setAction(getString(R.string.retry)) {
-            detailViewModel.onRefresh(username)
-        }.setAnchorView(binding.clDet).show()
+        Snackbar.make(binding.clDet, getString(R.string.error_when_load_the_data), Snackbar.LENGTH_INDEFINITE)
+            .setAction(getString(R.string.retry)) {
+                detailViewModel.onRefresh(username)
+            }
+            .show()
     }
 
     override fun onDestroyView() {
