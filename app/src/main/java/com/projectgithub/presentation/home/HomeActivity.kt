@@ -1,4 +1,4 @@
-package com.projectgithub.presentation.main
+package com.projectgithub.presentation.home
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.projectgithub.R
 import com.projectgithub.data.model.UserData
-import com.projectgithub.databinding.ActivityMainBinding
+import com.projectgithub.databinding.ActivityHomeBinding
 import com.projectgithub.presentation.detail.DetailActivity
 import com.projectgithub.presentation.detail.DetailActivity.Companion.AVATAR_INTENT
 import com.projectgithub.presentation.detail.DetailActivity.Companion.COMPANY_INTENT
@@ -17,9 +17,9 @@ import com.projectgithub.presentation.detail.DetailActivity.Companion.NAME_INTEN
 import com.projectgithub.presentation.detail.DetailActivity.Companion.REPOSITORY_INTENT
 import com.projectgithub.presentation.detail.DetailActivity.Companion.USERNAME_INTENT
 
-class MainActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityHomeBinding
 
     private lateinit var homeAdapter: HomeAdapter
     private val userData = ArrayList<UserData>()
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         val splashScreen = installSplashScreen()
 
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         initRecycler()
@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupListener() {
         homeAdapter.setOnItemClickCallback(object : HomeAdapter.OnItemClickCallback {
             override fun onItemClick(data: UserData) {
-                val intent = Intent(this@MainActivity, DetailActivity::class.java).apply {
+                val intent = Intent(this@HomeActivity, DetailActivity::class.java).apply {
                     putExtra(USERNAME_INTENT, data.username)
                     putExtra(NAME_INTENT, data.name)
                     putExtra(LOCATION_INTENT, data.location)

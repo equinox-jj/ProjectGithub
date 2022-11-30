@@ -1,4 +1,4 @@
-package com.projectgithub.presentation.main
+package com.projectgithub.presentation.home
 
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
