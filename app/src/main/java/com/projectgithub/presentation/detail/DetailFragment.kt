@@ -161,9 +161,11 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     private fun isLoading(isLoading: Boolean) {
         if (isLoading) {
-            binding.constraintDet.setVisibilityGone()
+            binding.ivAvatarDet.setVisibilityGone()
+            binding.constraintAblDet.setVisibilityGone()
         } else {
-            binding.constraintDet.setVisibilityVisible()
+            binding.ivAvatarDet.setVisibilityVisible()
+            binding.constraintAblDet.setVisibilityVisible()
         }
     }
 
