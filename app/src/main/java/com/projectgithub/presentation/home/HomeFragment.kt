@@ -37,8 +37,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.apply {
             svUserList.isSubmitButtonEnabled = true
             svUserList.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String): Boolean {
-                    query.let {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    query?.let {
                         if (it.isNotEmpty()) {
                             currentQuery = it
                             homeViewModel.searchUser(it)
@@ -48,8 +48,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     return true
                 }
 
-                override fun onQueryTextChange(newText: String): Boolean {
-                    newText.let {
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    newText?.let {
                         if (it.isNotEmpty()) {
                             currentQuery = it
                             homeViewModel.searchUser(it)
