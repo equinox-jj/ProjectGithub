@@ -30,7 +30,7 @@ class Repository constructor(private val apiServices: ApiServices) {
         } catch (e: Exception) {
             emit(Resources.Error(e.localizedMessage ?: ""))
         }
-    }.flowOn(Dispatchers.IO)
+    }
 
     fun getUserByName(username: String): Flow<Resources<DetailResponse>> = flow {
         emit(Resources.Loading())
@@ -40,7 +40,7 @@ class Repository constructor(private val apiServices: ApiServices) {
         } catch (e: Exception) {
             emit(Resources.Error(e.localizedMessage ?: ""))
         }
-    }.flowOn(Dispatchers.IO)
+    }
 
     fun getFollowers(username: String): Flow<Resources<List<ResultItem>>> = flow {
         emit(Resources.Loading())
@@ -50,7 +50,7 @@ class Repository constructor(private val apiServices: ApiServices) {
         } catch (e: Exception) {
             emit(Resources.Error(e.localizedMessage ?: ""))
         }
-    }.flowOn(Dispatchers.IO)
+    }
 
     fun getFollowing(username: String): Flow<Resources<List<ResultItem>>> = flow {
         emit(Resources.Loading())
@@ -60,6 +60,6 @@ class Repository constructor(private val apiServices: ApiServices) {
         } catch (e: Exception) {
             emit(Resources.Error(e.localizedMessage ?: ""))
         }
-    }.flowOn(Dispatchers.IO)
+    }
 
 }
