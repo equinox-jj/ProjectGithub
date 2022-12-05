@@ -164,19 +164,21 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     private fun isLoading(isLoading: Boolean) {
         if (isLoading) {
-            binding.constraintDet.setVisibilityGone()
+            binding.ivAvatarDet.setVisibilityGone()
+            binding.constraintAblDet.setVisibilityGone()
         } else {
-            binding.constraintDet.setVisibilityVisible()
+            binding.ivAvatarDet.setVisibilityVisible()
+            binding.constraintAblDet.setVisibilityVisible()
         }
     }
 
     private fun checkIsUserSaved(savedMenuItem: MenuItem) {
         detailViewModel.getUser.observe(viewLifecycleOwner) { entity ->
             try {
-                entity.forEach { result ->
-                    if (result.username == args.username) {
+                entity.forEach { userEntity ->
+                    if (userEntity.username == args.username) {
                         changeFavMenuColor(savedMenuItem, R.color.icon_favorite_color)
-                        savedUsername = result.username
+                        savedUsername = userEntity.username
                         isUserSaved = true
                     }
                 }

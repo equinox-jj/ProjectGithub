@@ -30,9 +30,6 @@ class HomeViewModel constructor(private val repository: Repository) : ViewModel(
                 .distinctUntilChanged()
                 .flatMapLatest { repository.searchUser(it) }
                 .collect {
-                    if (it is Resources.Success) {
-                        it.data
-                    }
                     _state.value = it
                 }
         }

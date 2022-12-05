@@ -16,7 +16,6 @@ class ThemeDataStore(private val dataStore: DataStore<Preferences>) {
     private val isDarkMode = booleanPreferencesKey(NIGHT_MODE_KEY)
 
     companion object {
-        @Volatile
         private var INSTANCE: ThemeDataStore? = null
 
         fun getInstance(dataStore: DataStore<Preferences>): ThemeDataStore {

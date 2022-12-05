@@ -19,7 +19,6 @@ class Repository constructor(
 ) {
 
     companion object {
-        @Volatile
         private var INSTANCE: Repository? = null
 
         fun getInstance(
