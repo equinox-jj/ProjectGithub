@@ -29,12 +29,14 @@ class HomeViewModel constructor(private val repository: Repository) : ViewModel(
      * if user typed "abc" and deleted "c" and typed "c" again. if the network call already going on
      * with "abc" it will not make the duplicate again with the search query.
      * @see flatMapLatest: operator used to  avoid the network call results
-     * which are not needed more for displaying to the user.*/
+     * which are not needed more for displaying to the user.
+     * @see collect: operator used to collect the value from the emitter.
+     * @see _state: is the consumer to consume the values from the stream.*/
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     fun searchUser(query: String) {
         viewModelScope.launch {
             flowOf(query)
-                .debounce(800)
+                .debounce(600)
                 .filter { it.trim().isEmpty().not() }
                 .distinctUntilChanged()
                 .flatMapLatest { repository.searchUser(it) }

@@ -35,6 +35,8 @@ class Repository constructor(
         }
     }
 
+    /**
+     * @see flow: is a builder to creating flows*/
     fun searchUser(query: String): Flow<Resources<List<ResultItem>>> = flow {
         emit(Resources.Loading())
         try {
