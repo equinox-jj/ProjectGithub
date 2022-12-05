@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.flowOn
 class Repository constructor(private val apiServices: ApiServices) {
 
     companion object {
-        @Volatile
         private var INSTANCE: Repository? = null
 
         fun getInstance(apiServices: ApiServices): Repository {

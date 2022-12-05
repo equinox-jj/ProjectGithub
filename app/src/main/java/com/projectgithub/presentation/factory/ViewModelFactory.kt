@@ -31,7 +31,6 @@ class ViewModelFactory(private val repository: Repository) :
     }
 
     companion object {
-        @Volatile
         private var INSTANCE: ViewModelFactory? = null
 
         fun getInstance(): ViewModelFactory {
