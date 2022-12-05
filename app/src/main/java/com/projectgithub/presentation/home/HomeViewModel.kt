@@ -33,9 +33,6 @@ class HomeViewModel @Inject constructor(private val repository: Repository) : Vi
                 .distinctUntilChanged()
                 .flatMapLatest { repository.searchUser(it) }
                 .collect {
-                    if (it is Resources.Success) {
-                        it.data
-                    }
                     _state.value = it
                 }
         }
