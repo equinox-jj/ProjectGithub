@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="splash_background_color">#E9E1E1</color>
+    <color name="splash_background_color">@color/md_theme_light_background</color>
     <color name="toolbar_color">#292222</color>
 
     <color name="corner_stroke_color">#322B2B</color>
