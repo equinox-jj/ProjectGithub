@@ -21,6 +21,15 @@ class HomeViewModel constructor(private val repository: Repository) : ViewModel(
         searchUser(query)
     }
 
+    /**
+     * @see debounce: operator used with a time constant. to prevent api call whenever user typed.
+     * @see filter: operator used to filter unwanted string like empty string and to avoid the
+     * unnecessary network call.
+     * @see distinctUntilChanged: operator used to avoid duplicate network calls data.
+     * if user typed "abc" and deleted "c" and typed "c" again. if the network call already going on
+     * with "abc" it will not make the duplicate again with the search query.
+     * @see flatMapLatest: operator used to  avoid the network call results
+     * which are not needed more for displaying to the user.*/
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     fun searchUser(query: String) {
         viewModelScope.launch {

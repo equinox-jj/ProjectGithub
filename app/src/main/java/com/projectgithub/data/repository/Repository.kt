@@ -14,6 +14,9 @@ class Repository constructor(private val apiServices: ApiServices) {
     companion object {
         private var INSTANCE: Repository? = null
 
+        /**
+         * @see INSTANCE: if the INSTANCE is not null, then return it.
+         * if INSTANCE is null, then create the repository instance.*/
         fun getInstance(apiServices: ApiServices): Repository {
             return INSTANCE ?: synchronized(this) {
                 INSTANCE ?: Repository(apiServices)
